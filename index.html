@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<meta name="description" content="Poultry Pro NG — Feed calculator, FCR tracker and egg production manager for Nigerian poultry farmers. Works offline."/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<meta name="description" content="Poultry Pro NG — Feed calculator, FCR tracker and egg production manager for Nigerian farmers. Works offline."/>
 <meta name="theme-color" content="#1B5E20"/>
 <title>Poultry Pro NG</title>
 <link rel="manifest" href="manifest.json"/>
@@ -15,390 +15,276 @@
   --red:#C62828;--red2:#FFEBEE;
   --amb:#E65100;--amb2:#FFF3E0;
   --blue:#0D47A1;--blue2:#E3F2FD;
+  --purple:#4A148C;--purple2:#F3E5F5;
   --txt:#1a1a1a;--txt2:#555;--txt3:#888;
   --bg:#fff;--bg2:#f7f7f5;--bg3:#efefeb;
-  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
+  --border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.18);
   --r:12px;--rs:8px;
   --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
-@media(prefers-color-scheme:dark){
-  :root{
-    --txt:#f0ede8;--txt2:#a8a49e;--txt3:#706d68;
-    --bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;
-    --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
-    --g4:#0a2e0d;--g5:#1a4d1e;--gold2:#2a2000;
-    --red2:#2a0a0a;--amb2:#2a1200;--blue2:#0a1a2a;
-  }
-}
+@media(prefers-color-scheme:dark){:root{
+  --txt:#f0ede8;--txt2:#a8a49e;--txt3:#706d68;
+  --bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;
+  --border:rgba(255,255,255,.1);--border2:rgba(255,255,255,.2);
+  --g4:#0a2e0d;--g5:#1a4d1e;--gold2:#2a2000;
+  --red2:#2a0a0a;--amb2:#2a1200;--blue2:#0a1a2a;--purple2:#1a0a2a;
+}}
 html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--font);-webkit-tap-highlight-color:transparent}
 .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
 
-/* ── ONBOARDING ── */
+/* ONBOARD */
 #onboard{display:flex;flex-direction:column;min-height:100vh;background:var(--bg)}
-
-/* HERO SECTION */
 .hero{background:var(--g1);color:#fff;padding:28px 20px 24px;text-align:center}
 .hero-logo{width:56px;height:56px;background:var(--gold);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
 .hero-logo svg{width:32px;height:32px;fill:var(--g1)}
-.hero-title{font-size:24px;font-weight:700;letter-spacing:-.3px;margin-bottom:6px}
+.hero-title{font-size:24px;font-weight:700;margin-bottom:6px}
 .hero-sub{font-size:14px;opacity:.8;line-height:1.5;margin-bottom:20px}
 .hero-badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 .badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500}
-
-/* SCREENSHOTS STRIP */
-.screenshots{padding:20px 0 16px;background:var(--bg2);overflow:hidden}
-.screenshots-title{font-size:13px;font-weight:600;color:var(--txt2);text-align:center;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
-.screens-scroll{display:flex;gap:10px;overflow-x:auto;padding:0 16px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
-.screens-scroll::-webkit-scrollbar{display:none}
-.ss-card{flex-shrink:0;width:200px;background:var(--bg);border:0.5px solid var(--border2);border-radius:10px;overflow:hidden;scroll-snap-align:start}
-.ss-header{padding:8px 10px;display:flex;align-items:center;gap:6px;border-bottom:0.5px solid var(--border)}
-.ss-dot{width:6px;height:6px;border-radius:50%}
-.ss-title{font-size:11px;font-weight:600;color:var(--txt2)}
-.ss-body{padding:10px}
-.ss-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:11px}
-.ss-row:last-child{border-bottom:none}
-.ss-lbl{color:var(--txt3)}
-.ss-val{font-weight:600;color:var(--txt)}
-.ss-big{font-size:22px;font-weight:700;text-align:center;padding:8px 0 4px}
-.ss-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin:0 auto;display:flex;justify-content:center;width:fit-content}
-.ss-bar-wrap{margin-top:8px}
-.ss-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:10px;color:var(--txt3)}
-.ss-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
-.ss-bar-fill{height:100%;border-radius:3px}
-.ss-vacc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:11px}
-.ss-vacc-row:last-child{border-bottom:none}
-.ss-vacc-name{font-weight:600;color:var(--txt)}
-.ss-vacc-date{color:var(--txt3)}
-.ss-due{background:var(--red2);color:var(--red);padding:1px 6px;border-radius:6px;font-size:10px;font-weight:600}
-.ss-ok{background:var(--g4);color:var(--g1);padding:1px 6px;border-radius:6px;font-size:10px;font-weight:600}
-
-/* FEATURES LIST */
-.features{padding:18px 16px}
-.features-title{font-size:15px;font-weight:600;color:var(--txt);margin-bottom:12px;text-align:center}
-.feature-row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:0.5px solid var(--border)}
-.feature-row:last-child{border-bottom:none}
-.feature-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.feature-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.feature-name{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:2px}
-.feature-desc{font-size:12px;color:var(--txt3);line-height:1.4}
-
-/* SIGNUP FORM */
-.signup{padding:16px}
-.signup-title{font-size:16px;font-weight:600;color:var(--txt);margin-bottom:4px}
-.signup-sub{font-size:13px;color:var(--txt3);margin-bottom:14px;line-height:1.5}
+.features-list{padding:20px;background:var(--bg)}
+.feature-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:.5px solid var(--border)}
+.feature-row:last-child{border:none}
+.feature-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feature-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.feature-name{font-size:14px;font-weight:600;color:var(--txt)}
+.feature-desc{font-size:12px;color:var(--txt3);margin-top:2px;line-height:1.4}
+.signup{padding:0 20px 32px;background:var(--bg)}
+.signup-title{font-size:18px;font-weight:700;color:var(--txt);margin-bottom:4px}
+.signup-sub{font-size:13px;color:var(--txt3);margin-bottom:16px;line-height:1.5}
 .form-row{margin-bottom:12px}
-.form-label{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.form-label{font-size:12px;color:var(--txt2);font-weight:500;margin-bottom:5px;display:flex;align-items:center;gap:4px}
 .required{color:var(--red);font-size:13px}
-.optional-tag{font-size:10px;color:var(--txt3);background:var(--bg3);padding:1px 6px;border-radius:4px;font-weight:400}
-input[type=text]{width:100%;padding:12px 14px;font-size:15px;border:1.5px solid var(--border2);border-radius:var(--rs);background:var(--bg);color:var(--txt);font-family:var(--font);transition:border-color .15s}
-input[type=text]:focus{outline:none;border-color:var(--g2)}
+.optional-tag{font-size:10px;background:var(--bg3);color:var(--txt3);padding:1px 6px;border-radius:8px;font-weight:400}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;padding:10px 12px;font-size:15px;border:.5px solid var(--border2);border-radius:var(--rs);background:var(--bg);color:var(--txt);font-family:var(--font);-webkit-appearance:none}
+input:focus,select:focus{outline:none;border-color:var(--g2)}
 input.err{border-color:var(--red)}
-.err-msg{font-size:12px;color:var(--red);margin-top:4px;display:none}
+.err-msg{font-size:11px;color:var(--red);margin-top:3px;display:none}
 .err-msg.show{display:block}
-.btn-start{width:100%;padding:15px;font-size:16px;font-weight:700;border-radius:var(--rs);border:none;cursor:pointer;background:var(--g1);color:#fff;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.1px;transition:opacity .15s}
-.btn-start:active{opacity:.85}
-.btn-start svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.btn-demo{width:100%;padding:12px;font-size:14px;font-weight:600;border-radius:var(--rs);border:1.5px solid var(--g1);cursor:pointer;background:transparent;color:var(--g1);font-family:var(--font);margin-top:10px;transition:background .15s}
-.btn-demo:active{background:var(--g4)}
-.demo-note{font-size:12px;color:var(--txt3);text-align:center;margin-top:8px;line-height:1.5}
+.btn-start{width:100%;padding:14px;background:var(--g1);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font);margin-bottom:12px}
+.btn-start svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn-demo{width:100%;padding:12px;background:transparent;color:var(--g2);border:1.5px solid var(--g2);border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);margin-bottom:8px}
+.demo-note{font-size:12px;color:var(--txt3);text-align:center;line-height:1.5}
 .divider-or{display:flex;align-items:center;gap:10px;margin:14px 0}
-.divider-or::before,.divider-or::after{content:'';flex:1;height:0.5px;background:var(--border2)}
+.divider-or::before,.divider-or::after{content:'';flex:1;height:.5px;background:var(--border)}
 .divider-or span{font-size:12px;color:var(--txt3)}
-.demo-banner{background:var(--amb2);border:0.5px solid #FFCC80;border-radius:var(--rs);padding:10px 14px;margin-bottom:14px;display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--amb);line-height:1.5}
-.demo-banner svg{width:14px;height:14px;stroke:var(--amb);fill:none;stroke-width:1.5;flex-shrink:0;margin-top:2px}
 
-/* ── MAIN APP ── */
+/* APP SHELL */
 .topbar{background:var(--g1);color:#fff;padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .topbar-brand{display:flex;align-items:center;gap:9px}
-.logo-sm{width:32px;height:32px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo-sm{width:30px;height:30px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center}
 .logo-sm svg{width:18px;height:18px;fill:var(--g1)}
-.brand-name{font-size:16px;font-weight:700}
-.brand-farm{font-size:10px;opacity:.75;margin-top:1px}
-.plan-badge{background:var(--gold);color:var(--g1);font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px}
-.demo-topbar-badge{background:var(--amb);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px}
-
-.nav{display:flex;background:var(--bg);border-bottom:0.5px solid var(--border);position:sticky;top:0;z-index:100;flex-shrink:0}
-.nav-btn{flex:1;padding:8px 2px 6px;border:none;background:transparent;cursor:pointer;font-size:9px;color:var(--txt3);display:flex;flex-direction:column;align-items:center;gap:3px;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--font)}
+.brand-name{font-size:15px;font-weight:700}
+.brand-farm{font-size:10px;opacity:.7;margin-top:1px}
+.plan-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;background:var(--gold);color:var(--g1)}
+.nav{display:flex;background:var(--bg);border-bottom:.5px solid var(--border);position:sticky;top:0;z-index:100;flex-shrink:0}
+.nav-btn{flex:1;padding:8px 1px 6px;border:none;background:transparent;cursor:pointer;font-size:9px;color:var(--txt3);display:flex;flex-direction:column;align-items:center;gap:2px;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--font)}
 .nav-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .nav-btn.active{color:var(--g1);border-bottom-color:var(--g1)}
-
 .screens{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .screen{display:none;padding:14px}
 .screen.active{display:block}
 .screen-title{font-size:19px;font-weight:700;color:var(--txt);margin-bottom:14px}
 
-.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
-.card-label{font-size:11px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+/* CARDS */
+.card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.card-label{font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
 
+/* METRICS */
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .metric{background:var(--bg2);border-radius:var(--rs);padding:11px 13px}
 .metric-label{font-size:11px;color:var(--txt3)}
-.metric-value{font-size:22px;font-weight:700;color:var(--txt);margin-top:3px}
-.metric-value.green{color:var(--g2)}
-.metric-value.amber{color:var(--amb)}
-.metric-value.red{color:var(--red)}
+.metric-value{font-size:22px;font-weight:700;color:var(--txt);margin-top:3px;line-height:1.1}
+.metric-value.green{color:var(--g2)}.metric-value.amber{color:var(--amb)}.metric-value.red{color:var(--red)}
 
+/* PILLS */
 .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
-.pill.green{background:var(--g4);color:var(--g1)}
-.pill.amber{background:var(--amb2);color:var(--amb)}
-.pill.red{background:var(--red2);color:var(--red)}
+.pill.green{background:var(--g4);color:var(--g1)}.pill.amber{background:var(--amb2);color:var(--amb)}
+.pill.red{background:var(--red2);color:var(--red)}.pill.blue{background:var(--blue2);color:var(--blue)}
+.pill.purple{background:var(--purple2);color:var(--purple)}
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .dot.green{background:var(--g2)}.dot.amber{background:var(--amb)}.dot.red{background:var(--red)}
 
-.form-row-app{margin-bottom:12px}
-.form-label-app{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;display:block}
-input[type=number],input[type=date],select,.inp-app{width:100%;padding:10px 12px;font-size:15px;border:0.5px solid var(--border2);border-radius:var(--rs);background:var(--bg);color:var(--txt);font-family:var(--font);appearance:none;-webkit-appearance:none}
-input:focus,select:focus{outline:none;border-color:var(--g2)}
+/* FORMS (in-app) */
+.frow{margin-bottom:11px}
+.flabel{font-size:12px;color:var(--txt2);font-weight:500;margin-bottom:4px;display:block}
 .input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-.btn{width:100%;padding:13px;font-size:15px;font-weight:700;border-radius:var(--rs);border:none;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity .15s}
+/* BUTTONS */
+.btn{width:100%;padding:12px;font-size:14px;font-weight:700;border-radius:var(--rs);border:none;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity .15s}
 .btn:active{opacity:.8}
 .btn-green{background:var(--g1);color:#fff}
-.btn-outline{background:transparent;border:1px solid var(--g1);color:var(--g1)}
-.btn-sm{padding:7px 13px;font-size:12px;width:auto;border-radius:7px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--txt2);cursor:pointer;font-family:var(--font);font-weight:500}
+.btn-outline{background:transparent;border:1.5px solid var(--g1);color:var(--g1)}
+.btn-red{background:var(--red);color:#fff}
+.btn-wa{background:#25D366;color:#fff}
+.btn-sm{padding:6px 12px;font-size:12px;width:auto;border-radius:7px;border:.5px solid var(--border2);background:var(--bg2);color:var(--txt2);cursor:pointer;font-family:var(--font);font-weight:500}
 .btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 
-.result-box{border-radius:var(--rs);padding:13px 15px;margin-top:12px;font-size:13px;line-height:1.6}
-.result-box.green{background:var(--g4);border:0.5px solid var(--g5)}
-.result-box.amber{background:var(--amb2);border:0.5px solid #FFCC80}
-.result-box.red{background:var(--red2);border:0.5px solid #EF9A9A}
-.result-box.blue{background:var(--blue2);border:0.5px solid #90CAF9}
-.result-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:14px}
+/* RESULTS */
+.result-box{border-radius:var(--rs);padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.6}
+.result-box.green{background:var(--g4);border:.5px solid var(--g5)}
+.result-box.amber{background:var(--amb2);border:.5px solid #FFCC80}
+.result-box.red{background:var(--red2);border:.5px solid #EF9A9A}
+.result-box.blue{background:var(--blue2);border:.5px solid #90CAF9}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:.5px solid var(--border);font-size:14px}
 .result-row:last-child{border-bottom:none}
 .result-row span:first-child{color:var(--txt2)}
-.result-row span:last-child{font-weight:700;color:var(--txt)}
+.result-row span:last-child{font-weight:600;color:var(--txt)}
 .big-num{font-size:36px;font-weight:700;color:var(--txt);line-height:1}
 
-.flock-card{border:0.5px solid var(--border);border-radius:var(--r);padding:13px 15px;margin-bottom:9px;background:var(--bg)}
+/* FLOCK CARDS */
+.flock-card{border:.5px solid var(--border);border-radius:var(--r);padding:13px 15px;margin-bottom:9px;background:var(--bg)}
 .flock-name{font-size:15px;font-weight:700;color:var(--txt)}
 .flock-sub{font-size:12px;color:var(--txt3);margin-top:3px;line-height:1.5}
 .flock-tag{font-size:11px;padding:3px 9px;border-radius:10px;font-weight:600}
-.flock-tag.broiler{background:var(--g4);color:var(--g1)}
-.flock-tag.layer{background:var(--gold2);color:#c77700}
-.flock-tag.cockerel{background:var(--blue2);color:var(--blue)}
-.flock-tag.closed{background:var(--bg3);color:var(--txt3)}
+.flock-tag.broiler{background:var(--g4);color:var(--g1)}.flock-tag.layer{background:var(--gold2);color:#c77700}
+.flock-tag.cockerel{background:var(--blue2);color:var(--blue)}.flock-tag.closed{background:var(--bg3);color:var(--txt3)}
 
+/* PROGRESS */
 .progress-bar{background:var(--bg3);border-radius:6px;height:8px;overflow:hidden;margin-top:6px}
 .progress-fill{height:100%;border-radius:6px;transition:width .4s}
 
+/* TABLE */
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
-.tbl th{text-align:left;font-size:11px;font-weight:600;color:var(--txt3);padding:5px 0;border-bottom:0.5px solid var(--border);text-transform:uppercase;letter-spacing:.4px}
-.tbl td{padding:8px 0;border-bottom:0.5px solid var(--border);color:var(--txt)}
+.tbl th{text-align:left;font-size:11px;font-weight:700;color:var(--txt3);padding:5px 0;border-bottom:.5px solid var(--border);text-transform:uppercase;letter-spacing:.4px}
+.tbl td{padding:8px 0;border-bottom:.5px solid var(--border);color:var(--txt)}
 .tbl tr:last-child td{border-bottom:none}
 
+/* MINI CHART */
 .mini-chart{display:flex;align-items:flex-end;gap:5px;height:56px;margin-top:10px}
 .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
 .bar-block{width:100%;border-radius:3px 3px 0 0;min-height:4px}
 .bar-lbl{font-size:9px;color:var(--txt3);text-align:center}
 
-.vacc-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:0.5px solid var(--border)}
+/* VACC */
+.vacc-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:.5px solid var(--border)}
 .vacc-row:last-child{border-bottom:none}
 .vacc-name{font-size:13px;font-weight:600;color:var(--txt)}
 .vacc-sub{font-size:12px;color:var(--txt3);margin-top:2px;line-height:1.4}
 
+/* INGR */
 .ingr-row{display:grid;grid-template-columns:1fr 72px 54px;gap:6px;align-items:center;margin-bottom:8px}
-.ingr-name{font-size:13px;color:var(--txt)}
-.ingr-qty{text-align:center;padding:7px 4px;font-size:13px;border:0.5px solid var(--border2);border-radius:7px;background:var(--bg);color:var(--txt);font-family:var(--font)}
-.ingr-cp{font-size:12px;color:var(--txt3);text-align:right}
+.ingr-qty{text-align:center;padding:7px 4px;font-size:13px;border:.5px solid var(--border2);border-radius:7px;background:var(--bg);color:var(--txt);font-family:var(--font)}
 
+/* EMPTY */
 .empty{text-align:center;padding:28px 20px}
 .empty-icon{width:52px;height:52px;background:var(--bg2);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
 .empty-icon svg{width:28px;height:28px;stroke:var(--txt3);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.empty-title{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:5px}
+.empty-title{font-size:14px;font-weight:600;color:var(--txt);margin-bottom:5px}
 .empty-sub{font-size:13px;color:var(--txt3);line-height:1.5;margin-bottom:16px}
 
-.alert{background:var(--amb2);border:0.5px solid #FFCC80;border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--amb)}
+/* ALERT */
+.alert{background:var(--amb2);border:.5px solid #FFCC80;border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--amb)}
 .alert svg{width:15px;height:15px;stroke:var(--amb);fill:none;stroke-width:1.5;flex-shrink:0;margin-top:1px}
 
-.divider{height:0.5px;background:var(--border);margin:13px 0}
+/* DIVIDER */
+.divider{height:.5px;background:var(--border);margin:13px 0}
 
-.unit-toggle{display:flex;border:0.5px solid var(--border2);border-radius:8px;overflow:hidden;width:fit-content}
+/* UNIT TOGGLE */
+.unit-toggle{display:flex;border:.5px solid var(--border2);border-radius:8px;overflow:hidden;width:fit-content}
 .unit-btn{padding:5px 14px;font-size:12px;border:none;background:transparent;cursor:pointer;color:var(--txt3);font-family:var(--font);font-weight:500}
 .unit-btn.active{background:var(--g1);color:#fff}
 
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--g1);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none}
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--g1);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.exit-demo{background:var(--amb2);border:0.5px solid #FFCC80;border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
-.exit-demo-text{font-size:13px;color:var(--amb);font-weight:500}
-.exit-demo-btn{background:var(--g1);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font)}
+/* DEMO BANNER */
+.exit-demo{background:var(--amb2);border:.5px solid #FFCC80;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.exit-demo-text{font-size:13px;color:var(--amb)}
+.exit-demo-btn{background:var(--amb);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap}
+
+/* P&L SCREEN */
+.pnl-summary{background:var(--bg2);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.pnl-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;border-bottom:.5px solid var(--border)}
+.pnl-row:last-child{border-bottom:none}
+.pnl-total{font-weight:700;font-size:17px}
+.pnl-profit{font-size:28px;font-weight:700;margin-top:8px;text-align:center;padding:12px;border-radius:var(--rs)}
+.pnl-profit.green{background:var(--g4);color:var(--g1)}
+.pnl-profit.red{background:var(--red2);color:var(--red)}
+
+/* PAYSTACK MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.modal-sheet{background:var(--bg);border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:700;color:var(--txt);margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--txt3);margin-bottom:16px;line-height:1.5}
+.modal-close{float:right;background:var(--bg2);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:16px;color:var(--txt2);display:flex;align-items:center;justify-content:center}
+.plan-card{border:.5px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.plan-card.selected{border:2px solid var(--g2);background:var(--g4)}
+.plan-name{font-size:16px;font-weight:700;color:var(--txt)}
+.plan-price{font-size:22px;font-weight:700;color:var(--g2);margin:4px 0}
+.plan-features{font-size:13px;color:var(--txt2);line-height:1.7}
+.plan-badge-pro{background:var(--gold);color:var(--g1);font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;margin-left:6px}
+
+/* WA SHARE BUTTON */
+.share-row{display:flex;gap:8px;margin-top:10px}
+.btn-share{flex:1;padding:10px;font-size:13px;font-weight:600;border-radius:var(--rs);border:none;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-share.wa{background:#25D366;color:#fff}
+.btn-share.copy{background:var(--bg2);color:var(--txt);border:.5px solid var(--border2)}
 </style>
 </head>
 <body>
 <div id="toast" class="toast"></div>
+<div id="modal-root"></div>
 
-<!-- ════════════════════════════════════
-     ONBOARDING / LANDING
-════════════════════════════════════ -->
+<!-- ONBOARDING -->
 <div id="onboard">
-
-  <!-- HERO -->
   <div class="hero">
-    <div class="hero-logo">
-      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
-    </div>
+    <div class="hero-logo"><svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg></div>
     <div class="hero-title">Poultry Pro NG</div>
-    <div class="hero-sub">Track feed costs, egg production and vaccination records. Built for Nigerian farmers. Works offline.</div>
+    <div class="hero-sub">Track feed costs, egg production and bird health.<br>Built for Nigerian farmers. Works offline.</div>
     <div class="hero-badges">
       <span class="badge">Works offline</span>
-      <span class="badge">Free to start</span>
-      <span class="badge">Built in Nigeria</span>
+      <span class="badge">Naira pricing</span>
+      <span class="badge">Local ingredients</span>
     </div>
   </div>
-
-  <!-- SCREENSHOTS -->
-  <div class="screenshots">
-    <div class="screenshots-title">See what it does</div>
-    <div class="screens-scroll">
-
-      <!-- Screenshot 1: Feed Cost -->
-      <div class="ss-card">
-        <div class="ss-header">
-          <div class="ss-dot" style="background:#1B5E20"></div>
-          <div class="ss-title">Feed Cost Calculator</div>
-        </div>
-        <div class="ss-body">
-          <div class="ss-row"><span class="ss-lbl">20 bags × ₦18,500</span><span class="ss-val">₦370,000</span></div>
-          <div class="ss-row"><span class="ss-lbl">Cost per bird</span><span class="ss-val" style="color:#1B5E20">₦740</span></div>
-          <div class="ss-row"><span class="ss-lbl">Cost per kg feed</span><span class="ss-val">₦740/kg</span></div>
-          <div style="margin-top:8px;background:#E8F5E9;border-radius:6px;padding:6px 8px;font-size:11px;color:#1B5E20;font-weight:600">500 birds · Batch 9 · Starter</div>
-        </div>
-      </div>
-
-      <!-- Screenshot 2: Feed Efficiency (FCR) -->
-      <div class="ss-card">
-        <div class="ss-header">
-          <div class="ss-dot" style="background:#E65100"></div>
-          <div class="ss-title">Feed Efficiency</div>
-        </div>
-        <div class="ss-body">
-          <div class="ss-big" style="color:#1B5E20">1.74</div>
-          <div class="ss-pill" style="background:#E8F5E9;color:#1B5E20">Good — on target</div>
-          <div style="font-size:10px;color:#888;text-align:center;margin-top:6px;line-height:1.4">For every 1kg your birds gained, you used 1.74kg of feed</div>
-          <div class="ss-bar-wrap">
-            <div class="ss-bar-row"><span>Wk2</span><div class="ss-bar"><div class="ss-bar-fill" style="width:80%;background:#2E7D32"></div></div><span>1.62</span></div>
-            <div class="ss-bar-row"><span>Wk3</span><div class="ss-bar"><div class="ss-bar-fill" style="width:88%;background:#2E7D32"></div></div><span>1.74</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Screenshot 3: Egg Production -->
-      <div class="ss-card">
-        <div class="ss-header">
-          <div class="ss-dot" style="background:#F9A825"></div>
-          <div class="ss-title">Egg Production</div>
-        </div>
-        <div class="ss-body">
-          <div class="ss-big" style="color:#1B5E20">78.5%</div>
-          <div class="ss-pill" style="background:#E8F5E9;color:#1B5E20">Excellent HDP</div>
-          <div class="ss-row" style="margin-top:8px"><span class="ss-lbl">Good eggs</span><span class="ss-val">268</span></div>
-          <div class="ss-row"><span class="ss-lbl">Crates today</span><span class="ss-val">8.9</span></div>
-          <div class="ss-row"><span class="ss-lbl">Day revenue</span><span class="ss-val" style="color:#E65100">₦16,020</span></div>
-        </div>
-      </div>
-
-      <!-- Screenshot 4: Vaccination -->
-      <div class="ss-card">
-        <div class="ss-header">
-          <div class="ss-dot" style="background:#C62828"></div>
-          <div class="ss-title">Vaccination Log</div>
-        </div>
-        <div class="ss-body">
-          <div class="ss-vacc-row"><div><div class="ss-vacc-name">Newcastle (Lasota)</div><div class="ss-vacc-date">Given: 10 Mar · Due: 31 Mar</div></div><span class="ss-due">Due!</span></div>
-          <div class="ss-vacc-row"><div><div class="ss-vacc-name">Gumboro (IBD)</div><div class="ss-vacc-date">Given: 18 Feb · Batch 9</div></div><span class="ss-ok">Done</span></div>
-          <div class="ss-vacc-row"><div><div class="ss-vacc-name">Marek's Disease</div><div class="ss-vacc-date">Given: 01 Feb · Hatchery</div></div><span class="ss-ok">Done</span></div>
-        </div>
-      </div>
-
-    </div>
-    <div style="text-align:center;font-size:11px;color:var(--txt3);margin-top:6px">Swipe to see more screens →</div>
+  <div class="features-list">
+    <div class="feature-row"><div class="feature-icon" style="background:#E8F5E9;color:#1B5E20"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="feature-name">Feed Cost Calculator</div><div class="feature-desc">Exact cost per bird in Naira. Every bag, every batch.</div></div></div>
+    <div class="feature-row"><div class="feature-icon" style="background:#FFF3E0;color:#E65100"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><div class="feature-name">Feed Efficiency Tracker</div><div class="feature-desc">See if your feed is working. Catch poor performance early.</div></div></div>
+    <div class="feature-row"><div class="feature-icon" style="background:#FFF8E1;color:#F9A825"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="14" rx="6" ry="8"/></svg></div><div><div class="feature-name">Egg Production Tracker</div><div class="feature-desc">Daily count, HDP%, revenue and 7-day trend.</div></div></div>
+    <div class="feature-row"><div class="feature-icon" style="background:#FFEBEE;color:#C62828"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="feature-name">Vaccination Alerts</div><div class="feature-desc">Never miss Newcastle or Gumboro. App alerts you when due.</div></div></div>
+    <div class="feature-row"><div class="feature-icon" style="background:#E3F2FD;color:#0D47A1"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div><div><div class="feature-name">Feed Mix Formulator</div><div class="feature-desc">Calculate protein % with local ingredients — PKC, GNC, maize.</div></div></div>
+    <div class="feature-row"><div class="feature-icon" style="background:#F3E5F5;color:#4A148C"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="feature-name">Profit &amp; Loss Per Batch</div><div class="feature-desc">Close a batch and see exactly what you made or lost.</div></div></div>
   </div>
-
-  <!-- FEATURES -->
-  <div class="features">
-    <div class="features-title">Everything in one place</div>
-    <div class="feature-row">
-      <div class="feature-icon" style="background:#E8F5E9;color:#1B5E20"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-      <div><div class="feature-name">Feed Cost Calculator</div><div class="feature-desc">Know your exact cost per bird in Naira. Every bag, every batch.</div></div>
-    </div>
-    <div class="feature-row">
-      <div class="feature-icon" style="background:#FFF8E1;color:#E65100"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-      <div><div class="feature-name">Feed Efficiency Tracker</div><div class="feature-desc">See if your feed is working. Catch poor performance before it costs you money.</div></div>
-    </div>
-    <div class="feature-row">
-      <div class="feature-icon" style="background:#FFF8E1;color:#F9A825"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="14" rx="6" ry="8"/></svg></div>
-      <div><div class="feature-name">Egg Production Tracker</div><div class="feature-desc">Daily egg count, HDP%, revenue and 7-day trend in one tap.</div></div>
-    </div>
-    <div class="feature-row">
-      <div class="feature-icon" style="background:#FFEBEE;color:#C62828"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-      <div><div class="feature-name">Vaccination Log + Alerts</div><div class="feature-desc">Never miss a Newcastle or Gumboro dose. App alerts you when it is due.</div></div>
-    </div>
-    <div class="feature-row">
-      <div class="feature-icon" style="background:#E3F2FD;color:#0D47A1"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
-      <div><div class="feature-name">Feed Mix Formulator</div><div class="feature-desc">Calculate protein % for your local ingredients — maize, PKC, soybean, GNC.</div></div>
-    </div>
-  </div>
-
-  <!-- SIGNUP FORM -->
   <div class="signup">
     <div class="signup-title">Start managing your farm</div>
     <div class="signup-sub">Your data stays on your phone. No account needed. Works without internet.</div>
-
-    <div class="form-row">
-      <label class="form-label">
-        Your name <span class="required">*</span>
-      </label>
-      <input type="text" id="ob-name" placeholder="e.g. Adekunle Bello"/>
-      <div class="err-msg" id="ob-name-err">Please enter your name to continue</div>
-    </div>
-    <div class="form-row">
-      <label class="form-label">
-        Farm name <span class="optional-tag">optional</span>
-      </label>
-      <input type="text" id="ob-farm" placeholder="e.g. Bello Farms, Ogun State"/>
-    </div>
-
-    <button class="btn-start" onclick="startApp()">
-      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      Start Managing My Farm
-    </button>
-
+    <div class="form-row"><label class="form-label">Your name <span class="required">*</span></label><input type="text" id="ob-name" placeholder="e.g. Adekunle Bello"/><div class="err-msg" id="ob-name-err">Please enter your name to continue</div></div>
+    <div class="form-row"><label class="form-label">Farm name <span class="optional-tag">optional</span></label><input type="text" id="ob-farm" placeholder="e.g. Bello Farms, Ogun State"/></div>
+    <button class="btn-start" onclick="startApp()"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Start Managing My Farm</button>
     <div class="divider-or"><span>or</span></div>
-
     <button class="btn-demo" onclick="startDemo()">Try Demo First — No details needed</button>
-    <div class="demo-note">Opens with a sample farm so you can explore all features freely before entering your own data.</div>
+    <div class="demo-note">Opens with a sample farm so you can explore all features freely.</div>
   </div>
+</div>
 
-</div><!-- /onboard -->
-
-<!-- ════════════════════════════════════
-     MAIN APP
-════════════════════════════════════ -->
+<!-- MAIN APP -->
 <div id="main-app" class="app" style="display:none">
   <div class="topbar">
     <div class="topbar-brand">
-      <div class="logo-sm"><svg viewBox="0 0 24 24" fill="var(--g1)"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg></div>
+      <div class="logo-sm"><svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg></div>
       <div><div class="brand-name">Poultry Pro NG</div><div class="brand-farm" id="topbar-farm">My Farm</div></div>
     </div>
-    <span id="plan-badge" class="plan-badge">FREE</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span id="plan-badge" class="plan-badge">FREE</span>
+      <button onclick="showUpgradeModal()" style="background:var(--gold);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--g1);cursor:pointer;font-family:var(--font)">PRO ₦1,500</button>
+    </div>
   </div>
-
   <div class="nav">
     <button class="nav-btn active" onclick="go('home',this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</button>
-    <button class="nav-btn" onclick="go('flocks',this)"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>Flocks</button>
+    <button class="nav-btn" onclick="go('flocks',this)"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>Flocks</button>
     <button class="nav-btn" onclick="go('feed',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Feed</button>
     <button class="nav-btn" onclick="go('efficiency',this)"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Efficiency</button>
     <button class="nav-btn" onclick="go('eggs',this)"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="14" rx="6" ry="8"/></svg>Eggs</button>
     <button class="nav-btn" onclick="go('health',this)"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Health</button>
     <button class="nav-btn" onclick="go('mix',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>Mix</button>
   </div>
-
   <div class="screens">
 
   <!-- HOME -->
   <div class="screen active" id="screen-home">
-    <div id="demo-exit-zone"></div>
-    <div id="alert-zone"></div>
+    <div id="demo-zone"></div>
+    <div id="vacc-alert-zone"></div>
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
       <div><div style="font-size:13px;color:var(--txt3)">Good day,</div><div style="font-size:21px;font-weight:700" id="home-name">Farmer</div></div>
       <div style="text-align:right;font-size:11px;color:var(--txt3);margin-top:4px" id="home-date"></div>
@@ -409,12 +295,12 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
       <div class="metric"><div class="metric-label">Total feed spend</div><div class="metric-value amber" id="hm-feed">₦0</div></div>
       <div class="metric"><div class="metric-label">Eggs this week</div><div class="metric-value green" id="hm-eggs">0</div></div>
     </div>
-    <div id="home-fcr"></div>
-    <div id="home-vacc"></div>
+    <div id="home-fcr-card"></div>
+    <div id="home-pnl-card"></div>
     <div id="home-empty" class="empty" style="display:none">
       <div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></div>
       <div class="empty-title">No flocks yet</div>
-      <div class="empty-sub">Add your first batch to start tracking feed costs, efficiency and egg production.</div>
+      <div class="empty-sub">Add your first batch to start tracking feed costs and egg production.</div>
       <button class="btn btn-green" onclick="go('flocks',document.querySelectorAll('.nav-btn')[1])">Add your first flock</button>
     </div>
   </div>
@@ -425,14 +311,14 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
     <div id="flock-list"></div>
     <div class="card">
       <div class="card-label">Add new flock</div>
-      <div class="form-row-app"><label class="form-label-app">Batch name <span style="color:var(--red)">*</span></label><input type="text" id="f-name" placeholder="e.g. Batch 10" class="inp-app"/></div>
+      <div class="frow"><label class="flabel">Batch name *</label><input type="text" id="f-name" placeholder="e.g. Batch 10"/></div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Bird type</label><select id="f-type"><option value="broiler">Broiler</option><option value="layer">Layer</option><option value="cockerel">Cockerel</option></select></div>
-        <div class="form-row-app"><label class="form-label-app">Bird count <span style="color:var(--red)">*</span></label><input type="number" id="f-count" placeholder="500" min="1"/></div>
+        <div class="frow"><label class="flabel">Bird type</label><select id="f-type"><option value="broiler">Broiler</option><option value="layer">Layer</option><option value="cockerel">Cockerel</option></select></div>
+        <div class="frow"><label class="flabel">Bird count *</label><input type="number" id="f-count" placeholder="500" min="1"/></div>
       </div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Start date</label><input type="date" id="f-date"/></div>
-        <div class="form-row-app"><label class="form-label-app">Supplier</label><input type="text" id="f-supplier" placeholder="e.g. Amo Farm" class="inp-app"/></div>
+        <div class="frow"><label class="flabel">Start date</label><input type="date" id="f-date"/></div>
+        <div class="frow"><label class="flabel">Supplier</label><input type="text" id="f-supplier" placeholder="e.g. Amo Farm"/></div>
       </div>
       <button class="btn btn-green" onclick="addFlock()">+ Add Flock</button>
     </div>
@@ -442,14 +328,14 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
   <div class="screen" id="screen-feed">
     <div class="screen-title">Feed Calculator</div>
     <div class="card">
-      <div class="form-row-app"><label class="form-label-app">Select flock</label><select id="fc-flock" onchange="calcFeed()"><option value="">— select flock —</option></select></div>
+      <div class="frow"><label class="flabel">Select flock</label><select id="fc-flock" onchange="calcFeed()"><option value="">— select flock —</option></select></div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Bags purchased <span style="color:var(--red)">*</span></label><input type="number" id="fc-bags" placeholder="20" min="1" oninput="calcFeed()"/></div>
-        <div class="form-row-app"><label class="form-label-app">Price per bag (₦) <span style="color:var(--red)">*</span></label><input type="number" id="fc-price" placeholder="18500" min="1" oninput="calcFeed()"/></div>
+        <div class="frow"><label class="flabel">Bags purchased *</label><input type="number" id="fc-bags" placeholder="20" min="1" oninput="calcFeed()"/></div>
+        <div class="frow"><label class="flabel">Price per bag (₦) *</label><input type="number" id="fc-price" placeholder="18500" min="1" oninput="calcFeed()"/></div>
       </div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Bag weight (kg)</label><input type="number" id="fc-wt" placeholder="25" value="25" oninput="calcFeed()"/></div>
-        <div class="form-row-app"><label class="form-label-app">Feed type</label><select id="fc-type"><option>Starter</option><option>Grower</option><option>Finisher</option><option>Layer Mash</option></select></div>
+        <div class="frow"><label class="flabel">Bag weight (kg)</label><input type="number" id="fc-wt" placeholder="25" value="25" oninput="calcFeed()"/></div>
+        <div class="frow"><label class="flabel">Feed type</label><select id="fc-type"><option>Starter</option><option>Grower</option><option>Finisher</option><option>Layer Mash</option></select></div>
       </div>
       <div id="feed-res" style="display:none">
         <div class="divider"></div>
@@ -457,6 +343,10 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
         <div class="result-row"><span>Cost per bird</span><span id="fc-bird">—</span></div>
         <div class="result-row"><span>Total feed (kg)</span><span id="fc-kg">—</span></div>
         <div class="result-row"><span>Cost per kg feed</span><span id="fc-pkg">—</span></div>
+        <div id="feed-share-row" class="share-row" style="display:none">
+          <button class="btn-share wa" onclick="shareFeedResult()"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.5 2C6.262 2 2 6.262 2 11.5c0 1.67.435 3.235 1.195 4.594L2 22l6.093-1.178A9.447 9.447 0 0 0 11.5 21.999C16.739 22 21 17.738 21 12.5 21 7.262 16.739 3 11.5 3z"/></svg>Share on WhatsApp</button>
+          <button class="btn-share copy" onclick="copyFeedResult()">Copy result</button>
+        </div>
       </div>
       <button class="btn btn-green" style="margin-top:12px" onclick="saveFeed()">Save entry</button>
     </div>
@@ -467,40 +357,42 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
     </div>
   </div>
 
-  <!-- EFFICIENCY (renamed from FCR) -->
+  <!-- EFFICIENCY -->
   <div class="screen" id="screen-efficiency">
     <div class="screen-title">Feed Efficiency</div>
     <div class="card">
-      <div style="background:var(--blue2);border-radius:var(--rs);padding:10px 12px;margin-bottom:12px;font-size:13px;color:var(--blue);line-height:1.5">
-        <b>What is feed efficiency?</b> It measures how much feed your birds need to gain 1kg of weight. Lower number = better performance = more profit.
-      </div>
-      <div class="form-row-app"><label class="form-label-app">Select flock</label><select id="fcr-flock"><option value="">— select flock —</option></select></div>
+      <div style="background:var(--blue2);border-radius:var(--rs);padding:10px 12px;margin-bottom:12px;font-size:13px;color:var(--blue);line-height:1.5"><b>What is feed efficiency?</b> It measures how much feed your birds need to gain 1kg of weight. Lower number = better performance = more profit.</div>
+      <div class="frow"><label class="flabel">Select flock</label><select id="fcr-flock"><option value="">— select flock —</option></select></div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Week number</label><input type="number" id="fcr-week" placeholder="4" min="1" max="12"/></div>
-        <div class="form-row-app"><label class="form-label-app">Live birds now</label><input type="number" id="fcr-birds" placeholder="487" oninput="calcFCR()"/></div>
+        <div class="frow"><label class="flabel">Week number</label><input type="number" id="fcr-week" placeholder="4" min="1" max="12" oninput="toggleStandard()"/></div>
+        <div class="frow"><label class="flabel">Live birds now</label><input type="number" id="fcr-birds" placeholder="487" oninput="calcFCR()"/></div>
       </div>
-      <div class="form-row-app"><label class="form-label-app">Feed consumed this week (kg) <span style="color:var(--red)">*</span></label><input type="number" id="fcr-feed" placeholder="250" oninput="calcFCR()"/></div>
+      <div class="frow"><label class="flabel">Feed consumed this week (kg) *</label><input type="number" id="fcr-feed" placeholder="250" oninput="calcFCR()"/></div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Avg bird weight NOW (g)</label><input type="number" id="fcr-wnow" placeholder="1400" oninput="calcFCR()"/></div>
-        <div class="form-row-app"><label class="form-label-app">Avg weight LAST week (g)</label><input type="number" id="fcr-wlast" placeholder="980" oninput="calcFCR()"/></div>
+        <div class="frow"><label class="flabel">Avg bird weight NOW (g)</label><input type="number" id="fcr-wnow" placeholder="1400" oninput="calcFCR()"/></div>
+        <div class="frow"><label class="flabel">Avg weight LAST week (g)</label><input type="number" id="fcr-wlast" placeholder="980" oninput="calcFCR()"/></div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-        <input type="checkbox" id="use-standard" onchange="toggleStandard()" style="width:16px;height:16px;cursor:pointer"/>
-        <label for="use-standard" style="font-size:13px;color:var(--txt2);cursor:pointer">I don't weigh my birds — use standard Cobb 500 targets</label>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:10px;background:var(--bg2);border-radius:var(--rs)">
+        <input type="checkbox" id="use-standard" onchange="applyStandard()" style="width:16px;height:16px;cursor:pointer"/>
+        <label for="use-standard" style="font-size:13px;color:var(--txt2);cursor:pointer;line-height:1.4">I don't weigh my birds — use standard Cobb 500 targets for my week</label>
       </div>
       <div id="fcr-res" style="display:none">
         <div class="divider"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
           <div>
-            <div style="font-size:12px;color:var(--txt3);margin-bottom:4px">Feed efficiency ratio (FCR)</div>
+            <div style="font-size:12px;color:var(--txt3);margin-bottom:4px">Feed efficiency (FCR)</div>
             <div class="big-num" id="fcr-val">—</div>
-            <div style="font-size:12px;color:var(--txt3);margin-top:5px" id="fcr-plain"></div>
-            <div style="font-size:12px;color:var(--txt3);margin-top:2px" id="fcr-gain"></div>
+            <div style="font-size:13px;color:var(--txt2);margin-top:5px;line-height:1.4" id="fcr-plain"></div>
+            <div style="font-size:12px;color:var(--txt3);margin-top:3px" id="fcr-gain"></div>
           </div>
           <span class="pill" id="fcr-pill"></span>
         </div>
         <div id="fcr-advice" class="result-box green"></div>
         <div style="margin-top:12px"><div style="font-size:12px;color:var(--txt3);margin-bottom:6px">Weekly history</div><div class="mini-chart" id="fcr-chart"></div></div>
+        <div class="share-row">
+          <button class="btn-share wa" onclick="shareFCRResult()"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.5 2C6.262 2 2 6.262 2 11.5c0 1.67.435 3.235 1.195 4.594L2 22l6.093-1.178A9.447 9.447 0 0 0 11.5 21.999C16.739 22 21 17.738 21 12.5 21 7.262 16.739 3 11.5 3z"/></svg>Share on WhatsApp</button>
+          <button class="btn-share copy" onclick="copyFCRResult()">Copy result</button>
+        </div>
       </div>
       <button class="btn btn-green" style="margin-top:12px" onclick="saveFCR()">Save this week's entry</button>
     </div>
@@ -517,14 +409,14 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
   <div class="screen" id="screen-eggs">
     <div class="screen-title">Egg Production</div>
     <div class="card">
-      <div class="form-row-app"><label class="form-label-app">Select layer flock</label><select id="egg-flock"><option value="">— select flock —</option></select></div>
+      <div class="frow"><label class="flabel">Select layer flock</label><select id="egg-flock"><option value="">— select flock —</option></select></div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Live hens today <span style="color:var(--red)">*</span></label><input type="number" id="egg-hens" placeholder="340" oninput="calcEggs()"/></div>
-        <div class="form-row-app"><label class="form-label-app">Eggs collected <span style="color:var(--red)">*</span></label><input type="number" id="egg-col" placeholder="280" oninput="calcEggs()"/></div>
+        <div class="frow"><label class="flabel">Live hens today *</label><input type="number" id="egg-hens" placeholder="340" oninput="calcEggs()"/></div>
+        <div class="frow"><label class="flabel">Eggs collected *</label><input type="number" id="egg-col" placeholder="280" oninput="calcEggs()"/></div>
       </div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Cracked eggs</label><input type="number" id="egg-crack" placeholder="8" oninput="calcEggs()"/></div>
-        <div class="form-row-app"><label class="form-label-app">Price per crate (₦)</label><input type="number" id="egg-price" placeholder="1800" oninput="calcEggs()"/></div>
+        <div class="frow"><label class="flabel">Cracked eggs</label><input type="number" id="egg-crack" placeholder="8" oninput="calcEggs()"/></div>
+        <div class="frow"><label class="flabel">Price per crate (₦)</label><input type="number" id="egg-price" placeholder="1800" oninput="calcEggs()"/></div>
       </div>
       <div id="egg-res" style="display:none">
         <div class="divider"></div>
@@ -535,6 +427,10 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
           <div class="metric"><div class="metric-label">Day revenue</div><div class="metric-value amber" id="egg-rev">—</div></div>
         </div>
         <div id="egg-status" class="result-box green"></div>
+        <div class="share-row">
+          <button class="btn-share wa" onclick="shareEggResult()"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.5 2C6.262 2 2 6.262 2 11.5c0 1.67.435 3.235 1.195 4.594L2 22l6.093-1.178A9.447 9.447 0 0 0 11.5 21.999C16.739 22 21 17.738 21 12.5 21 7.262 16.739 3 11.5 3z"/></svg>Share on WhatsApp</button>
+          <button class="btn-share copy" onclick="copyEggResult()">Copy result</button>
+        </div>
       </div>
       <button class="btn btn-green" style="margin-top:12px" onclick="saveEgg()">Save today's record</button>
     </div>
@@ -550,22 +446,19 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
     <div class="screen-title">Health &amp; Vaccination</div>
     <div class="card">
       <div class="card-label">Log vaccination / medication</div>
-      <div class="form-row-app"><label class="form-label-app">Select flock <span style="color:var(--red)">*</span></label><select id="v-flock"><option value="">— select flock —</option></select></div>
+      <div class="frow"><label class="flabel">Select flock *</label><select id="v-flock"><option value="">— select flock —</option></select></div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Vaccine / drug <span style="color:var(--red)">*</span></label><input type="text" id="v-name" placeholder="e.g. Newcastle Lasota" class="inp-app"/></div>
-        <div class="form-row-app"><label class="form-label-app">Date given <span style="color:var(--red)">*</span></label><input type="date" id="v-date"/></div>
+        <div class="frow"><label class="flabel">Vaccine / drug *</label><input type="text" id="v-name" placeholder="e.g. Newcastle Lasota"/></div>
+        <div class="frow"><label class="flabel">Date given *</label><input type="date" id="v-date"/></div>
       </div>
       <div class="input-row">
-        <div class="form-row-app"><label class="form-label-app">Birds treated</label><input type="number" id="v-birds" placeholder="500"/></div>
-        <div class="form-row-app"><label class="form-label-app">Next due (days)</label><input type="number" id="v-next" placeholder="21"/></div>
+        <div class="frow"><label class="flabel">Birds treated</label><input type="number" id="v-birds" placeholder="500"/></div>
+        <div class="frow"><label class="flabel">Next due (days)</label><input type="number" id="v-next" placeholder="21"/></div>
       </div>
-      <div class="form-row-app"><label class="form-label-app">Notes</label><input type="text" id="v-notes" placeholder="e.g. Eye drop method" class="inp-app"/></div>
+      <div class="frow"><label class="flabel">Notes</label><input type="text" id="v-notes" placeholder="e.g. Eye drop method"/></div>
       <button class="btn btn-green" onclick="saveVacc()">Save record</button>
     </div>
-    <div class="card">
-      <div class="card-label">Vaccination records</div>
-      <div id="vacc-list"><div style="font-size:13px;color:var(--txt3);padding:8px 0;text-align:center">No records yet</div></div>
-    </div>
+    <div class="card"><div class="card-label">Vaccination records</div><div id="vacc-list"><div style="font-size:13px;color:var(--txt3);padding:8px 0;text-align:center">No records yet</div></div></div>
     <div class="card">
       <div class="card-label">Standard Nigerian schedule</div>
       <table class="tbl"><thead><tr><th>Day</th><th>Vaccine</th><th>Method</th></tr></thead>
@@ -577,7 +470,7 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
   <div class="screen" id="screen-mix">
     <div class="screen-title">Feed Mix Formulator</div>
     <div class="card">
-      <div class="form-row-app"><label class="form-label-app">Target feed type</label>
+      <div class="frow"><label class="flabel">Target feed type</label>
         <select id="mix-type" onchange="calcMix()">
           <option value="starter">Broiler Starter — 22% protein target</option>
           <option value="finisher">Broiler Finisher — 19% protein target</option>
@@ -588,11 +481,11 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
         <span style="font-size:12px;color:var(--txt2);font-weight:500">Input unit</span>
         <div class="unit-toggle"><button class="unit-btn active" id="u-kg" onclick="setUnit('kg')">kg</button><button class="unit-btn" id="u-mudu" onclick="setUnit('mudu')">mudu</button></div>
       </div>
-      <div id="mudu-row" style="display:none" class="form-row-app"><label class="form-label-app">Your mudu weight (kg)</label><input type="number" id="mudu-wt" value="1.5" step="0.1" min="0.5" oninput="calcMix()"/></div>
+      <div id="mudu-row" style="display:none" class="frow"><label class="flabel">Your mudu weight (kg)</label><input type="number" id="mudu-wt" value="1.5" step="0.1" min="0.5" oninput="calcMix()"/></div>
       <div style="display:grid;grid-template-columns:1fr 72px 54px;gap:6px;margin-bottom:8px">
-        <span style="font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.4px">Ingredient</span>
-        <span style="font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;text-align:center">Qty</span>
-        <span style="font-size:11px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;text-align:right">Protein</span>
+        <span style="font-size:11px;color:var(--txt3);font-weight:700;text-transform:uppercase;letter-spacing:.4px">Ingredient</span>
+        <span style="font-size:11px;color:var(--txt3);font-weight:700;text-transform:uppercase;letter-spacing:.4px;text-align:center">Qty</span>
+        <span style="font-size:11px;color:var(--txt3);font-weight:700;text-transform:uppercase;letter-spacing:.4px;text-align:right">Protein</span>
       </div>
       <div id="ingr-list"></div>
       <div id="mix-res" style="display:none">
@@ -617,109 +510,54 @@ input:focus,select:focus{outline:none;border-color:var(--g2)}
 </div><!-- /main-app -->
 
 <script>
-var INGR=[
-  {n:'Maize',cp:8.5,price:390},{n:'Soybean meal',cp:44,price:620},
-  {n:'Groundnut cake',cp:45,price:540},{n:'Palm kernel cake',cp:16,price:200},
-  {n:'Fish meal (local)',cp:60,price:1100},{n:'Wheat offal',cp:14,price:175},
-  {n:'Bone meal',cp:0,price:300},{n:'Limestone',cp:0,price:100},
-  {n:'Premix',cp:0,price:2200},{n:'Salt',cp:0,price:60}
-];
+var INGR=[{n:'Maize',cp:8.5,price:390},{n:'Soybean meal',cp:44,price:620},{n:'Groundnut cake',cp:45,price:540},{n:'Palm kernel cake',cp:16,price:200},{n:'Fish meal (local)',cp:60,price:1100},{n:'Wheat offal',cp:14,price:175},{n:'Bone meal',cp:0,price:300},{n:'Limestone',cp:0,price:100},{n:'Premix',cp:0,price:2200},{n:'Salt',cp:0,price:60}];
 var TARGETS={starter:22,finisher:19,layer:17};
 var SAMPLES={starter:[55,28,0,5,4,5,1.5,0.75,0.25,0.25],finisher:[60,22,6,0,3,6,1.5,0.75,0.25,0.25],layer:[55,18,6,5,2,10,1,4.5,0.25,0.25]};
-var COBB_WEIGHTS=[0,175,420,850,1400,1900,2400];
+var COBB=[0,175,420,850,1400,1900,2400];
+var APP_URL='https://poultrypro-ng.netlify.app';
 
-/* Standard breed weekly weights for "I don't weigh my birds" option */
-var STANDARD_WEIGHTS=COBB_WEIGHTS;
-
-function db(k,v){if(v===undefined){try{var r=localStorage.getItem('ppng3_'+k);return r?JSON.parse(r):null}catch(e){return null}}try{localStorage.setItem('ppng3_'+k,JSON.stringify(v))}catch(e){}}
-
+function db(k,v){if(v===undefined){try{var r=localStorage.getItem('ppng4_'+k);return r?JSON.parse(r):null}catch(e){return null}}try{localStorage.setItem('ppng4_'+k,JSON.stringify(v))}catch(e){}}
 var isDemo=false;
-var S={farmer:db('farmer')||{name:'',farm:''},flocks:db('flocks')||[],feeds:db('feeds')||[],fcrs:db('fcrs')||[],eggs:db('eggs')||[],vaccs:db('vaccs')||[],unit:'kg'};
+var S={farmer:db('farmer')||{name:'',farm:''},flocks:db('flocks')||[],feeds:db('feeds')||[],fcrs:db('fcrs')||[],eggs:db('eggs')||[],vaccs:db('vaccs')||[],sales:db('sales')||[],unit:'kg'};
 
-/* Demo data */
 var DEMO={
-  farmer:{name:'Demo Farmer',farm:'Demo Farm — 500 Layers'},
-  flocks:[
-    {id:'DF1',name:'Batch 9 (Broilers)',type:'broiler',count:500,startDate:'2026-02-01',supplier:'Amo Farm',status:'active'},
-    {id:'DF2',name:'Layer Flock 3',type:'layer',count:350,startDate:'2025-11-10',supplier:'Chi Farm',status:'active'}
-  ],
-  feeds:[
-    {id:'DFE1',fid:'DF1',date:'2026-03-01',type:'Starter',bags:20,price:18500,wt:25,cost:370000,kg:500},
-    {id:'DFE2',fid:'DF2',date:'2026-03-05',type:'Layer Mash',bags:15,price:17500,wt:25,cost:262500,kg:375}
-  ],
-  fcrs:[
-    {id:'DFCR1',fid:'DF1',week:2,date:'2026-02-15',feed:85,wnow:420,wlast:170,birds:498,fcr:1.62},
-    {id:'DFCR2',fid:'DF1',week:3,date:'2026-02-22',feed:180,wnow:850,wlast:420,birds:495,fcr:1.68},
-    {id:'DFCR3',fid:'DF1',week:4,date:'2026-03-01',feed:250,wnow:1400,wlast:850,birds:490,fcr:1.74}
-  ],
-  eggs:[
-    {id:'DEG1',fid:'DF2',date:'2026-03-11',hens:345,col:268,crack:8,price:1800,hdp:77.7},
-    {id:'DEG2',fid:'DF2',date:'2026-03-12',hens:345,col:272,crack:5,price:1800,hdp:78.8},
-    {id:'DEG3',fid:'DF2',date:'2026-03-13',hens:344,col:265,crack:9,price:1800,hdp:77.0},
-    {id:'DEG4',fid:'DF2',date:'2026-03-14',hens:344,col:270,crack:6,price:1800,hdp:78.5},
-    {id:'DEG5',fid:'DF2',date:'2026-03-15',hens:343,col:263,crack:7,price:1800,hdp:76.7},
-    {id:'DEG6',fid:'DF2',date:'2026-03-16',hens:343,col:274,crack:4,price:1800,hdp:79.9},
-    {id:'DEG7',fid:'DF2',date:'2026-03-17',hens:342,col:268,crack:8,price:1800,hdp:78.4}
-  ],
-  vaccs:[
-    {id:'DVC1',fid:'DF1',name:'Newcastle (Lasota)',date:'2026-02-08',birds:500,nextDate:'2026-03-01',notes:'Eye drop method'},
-    {id:'DVC2',fid:'DF1',name:'Gumboro (IBD)',date:'2026-02-18',birds:500,nextDate:'2026-03-10',notes:'Drinking water'},
-    {id:'DVC3',fid:'DF2',name:'Newcastle booster',date:'2026-03-01',birds:350,nextDate:'2026-04-01',notes:''}
-  ]
+  farmer:{name:'Demo Farmer',farm:'Demo Farm'},
+  flocks:[{id:'DF1',name:'Batch 9 (Broilers)',type:'broiler',count:500,startDate:'2026-02-01',supplier:'Amo Farm',status:'active'},{id:'DF2',name:'Layer Flock 3',type:'layer',count:350,startDate:'2025-11-10',supplier:'Chi Farm',status:'active'},{id:'DF3',name:'Batch 7 (Broilers)',type:'broiler',count:400,startDate:'2025-12-01',supplier:'Amo Farm',status:'closed',soldDate:'2026-02-10',soldPrice:4800,soldCount:388}],
+  feeds:[{id:'DFE1',fid:'DF1',date:'2026-02-01',type:'Starter',bags:20,price:18500,wt:25,cost:370000,kg:500},{id:'DFE2',fid:'DF1',date:'2026-02-15',type:'Finisher',bags:15,price:19000,wt:25,cost:285000,kg:375},{id:'DFE3',fid:'DF2',date:'2026-03-05',type:'Layer Mash',bags:15,price:17500,wt:25,cost:262500,kg:375},{id:'DFE4',fid:'DF3',date:'2025-12-01',type:'Starter',bags:18,price:18000,wt:25,cost:324000,kg:450},{id:'DFE5',fid:'DF3',date:'2025-12-20',type:'Finisher',bags:14,price:19000,wt:25,cost:266000,kg:350}],
+  fcrs:[{id:'DFCR1',fid:'DF1',week:2,date:'2026-02-15',feed:85,wnow:420,wlast:170,birds:498,fcr:1.62},{id:'DFCR2',fid:'DF1',week:3,date:'2026-02-22',feed:180,wnow:850,wlast:420,birds:495,fcr:1.68},{id:'DFCR3',fid:'DF1',week:4,date:'2026-03-01',feed:250,wnow:1400,wlast:850,birds:490,fcr:1.74}],
+  eggs:[{id:'DEG1',fid:'DF2',date:'2026-03-11',hens:345,col:268,crack:8,price:1800,hdp:77.7},{id:'DEG2',fid:'DF2',date:'2026-03-12',hens:345,col:272,crack:5,price:1800,hdp:78.8},{id:'DEG3',fid:'DF2',date:'2026-03-13',hens:344,col:265,crack:9,price:1800,hdp:77.0},{id:'DEG4',fid:'DF2',date:'2026-03-14',hens:344,col:270,crack:6,price:1800,hdp:78.5},{id:'DEG5',fid:'DF2',date:'2026-03-15',hens:343,col:263,crack:7,price:1800,hdp:76.7},{id:'DEG6',fid:'DF2',date:'2026-03-16',hens:343,col:274,crack:4,price:1800,hdp:79.9},{id:'DEG7',fid:'DF2',date:'2026-03-17',hens:342,col:268,crack:8,price:1800,hdp:78.4}],
+  vaccs:[{id:'DVC1',fid:'DF1',name:'Newcastle (Lasota)',date:'2026-02-08',birds:500,nextDate:'2026-02-28',notes:'Eye drop method'},{id:'DVC2',fid:'DF1',name:'Gumboro (IBD)',date:'2026-02-18',birds:500,nextDate:'2026-03-10',notes:'Drinking water'},{id:'DVC3',fid:'DF2',name:'Newcastle booster',date:'2026-03-01',birds:350,nextDate:'2026-04-01',notes:''}],
+  sales:[{id:'DS1',fid:'DF3',date:'2026-02-10',count:388,pricePerBird:4800,totalRevenue:1862400}],
+  unit:'kg'
 };
 
-function save(){if(isDemo)return;db('farmer',S.farmer);db('flocks',S.flocks);db('feeds',S.feeds);db('fcrs',S.fcrs);db('eggs',S.eggs);db('vaccs',S.vaccs);}
+function save(){if(isDemo)return;db('farmer',S.farmer);db('flocks',S.flocks);db('feeds',S.feeds);db('fcrs',S.fcrs);db('eggs',S.eggs);db('vaccs',S.vaccs);db('sales',S.sales);}
 function fmt(n){return '₦'+Math.round(n).toLocaleString();}
 function td(){return new Date().toISOString().split('T')[0];}
-function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);}
 
-/* ── ENTRY POINTS ── */
+/* ── ONBOARD ── */
 function startApp(){
   var nm=document.getElementById('ob-name').value.trim();
-  var errEl=document.getElementById('ob-name-err');
-  if(!nm){
-    errEl.classList.add('show');
-    document.getElementById('ob-name').classList.add('err');
-    document.getElementById('ob-name').focus();
-    return;
-  }
-  errEl.classList.remove('show');
-  document.getElementById('ob-name').classList.remove('err');
+  if(!nm){document.getElementById('ob-name-err').classList.add('show');document.getElementById('ob-name').classList.add('err');document.getElementById('ob-name').focus();return;}
+  document.getElementById('ob-name-err').classList.remove('show');document.getElementById('ob-name').classList.remove('err');
   S.farmer={name:nm,farm:document.getElementById('ob-farm').value.trim()||'My Farm'};
-  save();isDemo=false;launchApp();
+  save();isDemo=false;launch();
 }
-
-function startDemo(){
-  isDemo=true;
-  S=Object.assign({},DEMO,{unit:'kg'});
-  launchApp();
-}
-
-function exitDemo(){
-  isDemo=false;
-  S={farmer:{name:'',farm:''},flocks:[],feeds:[],fcrs:[],eggs:[],vaccs:[],unit:'kg'};
-  document.getElementById('main-app').style.display='none';
-  document.getElementById('onboard').style.display='flex';
-  document.getElementById('ob-name').value='';
-  document.getElementById('ob-farm').value='';
-}
-
-function launchApp(){
+function startDemo(){isDemo=true;S=JSON.parse(JSON.stringify(DEMO));launch();}
+function exitDemo(){isDemo=false;S={farmer:{name:'',farm:''},flocks:[],feeds:[],fcrs:[],eggs:[],vaccs:[],sales:[],unit:'kg'};document.getElementById('main-app').style.display='none';document.getElementById('onboard').style.display='flex';document.getElementById('ob-name').value='';document.getElementById('ob-farm').value='';}
+function launch(){
   document.getElementById('onboard').style.display='none';
   document.getElementById('main-app').style.display='flex';
   document.getElementById('topbar-farm').textContent=S.farmer.farm||'My Farm';
   document.getElementById('home-name').textContent=S.farmer.name||'Farmer';
   document.getElementById('home-date').textContent=new Date().toLocaleDateString('en-NG',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-  if(isDemo){
-    document.getElementById('plan-badge').textContent='DEMO';
-    document.getElementById('plan-badge').style.background='var(--amb)';
-    document.getElementById('plan-badge').style.color='#fff';
-  }
+  if(isDemo){document.getElementById('plan-badge').textContent='DEMO';document.getElementById('plan-badge').style.background=var_amb();document.getElementById('plan-badge').style.color='#fff';}
   buildIngr();populateSelects();renderHome();renderFlocks();renderVacc();
-  var fd=document.getElementById('f-date');if(fd)fd.value=td();
-  var vd=document.getElementById('v-date');if(vd)vd.value=td();
+  document.getElementById('f-date').value=td();document.getElementById('v-date').value=td();
   renderEggChart('DF2');
 }
+function var_amb(){return '#E65100';}
 
 /* ── NAV ── */
 function go(id,btn){
@@ -732,18 +570,15 @@ function go(id,btn){
   if(id==='health')renderVacc();
 }
 
-/* ── DEMO EXIT BANNER ── */
-function renderDemoExit(){
-  var z=document.getElementById('demo-exit-zone');
-  if(!z)return;
-  if(isDemo){
-    z.innerHTML='<div class="exit-demo"><div class="exit-demo-text">You are in demo mode — data is not saved</div><button class="exit-demo-btn" onclick="exitDemo()">Create my real account</button></div>';
-  } else {z.innerHTML='';}
+/* ── DEMO BANNER ── */
+function renderDemoBanner(){
+  var z=document.getElementById('demo-zone');if(!z)return;
+  z.innerHTML=isDemo?'<div class="exit-demo"><div class="exit-demo-text">Demo mode — your data is not saved</div><button class="exit-demo-btn" onclick="exitDemo()">Create my account</button></div>':'';
 }
 
 /* ── FLOCKS ── */
 function addFlock(){
-  if(isDemo){toast('Exit demo mode to add your own flocks');return;}
+  if(isDemo){toast('Exit demo to add your own flocks');return;}
   var nm=document.getElementById('f-name').value.trim();
   if(!nm){toast('Please enter a batch name');return;}
   var cnt=parseInt(document.getElementById('f-count').value)||0;
@@ -754,9 +589,10 @@ function addFlock(){
   toast('Flock added!');
 }
 function closeFlock(id){
-  if(isDemo){toast('Exit demo mode to manage your own flocks');return;}
+  if(isDemo){toast('Exit demo to manage your flocks');return;}
   var f=S.flocks.find(function(x){return x.id===id;});
-  if(f&&confirm('Close "'+f.name+'"?')){f.status='closed';save();renderFlocks();renderHome();toast('Batch closed');}
+  if(!f)return;
+  showPnLModal(f);
 }
 function renderFlocks(){
   var el=document.getElementById('flock-list');
@@ -765,9 +601,12 @@ function renderFlocks(){
     var spend=S.feeds.filter(function(e){return e.fid===f.id;}).reduce(function(s,e){return s+e.cost;},0);
     var fcrs=S.fcrs.filter(function(l){return l.fid===f.id;});
     var fcrTxt=fcrs.length?'Efficiency: '+fcrs[fcrs.length-1].fcr+' FCR':'No efficiency data yet';
+    var sale=S.sales.find(function(x){return x.fid===f.id;});
+    var pnl=sale?(sale.totalRevenue-spend):null;
     var tag=f.status==='closed'?'closed':f.type;
     var tagLbl=f.status==='closed'?'Closed':f.type.charAt(0).toUpperCase()+f.type.slice(1);
-    return '<div class="flock-card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="flock-name">'+f.name+'</div><div class="flock-sub">'+f.count.toLocaleString()+' birds &middot; Started '+f.startDate+'</div><div class="flock-sub">'+fcrTxt+' &middot; Feed: '+fmt(spend)+'</div>'+(f.supplier?'<div class="flock-sub">Supplier: '+f.supplier+'</div>':'')+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px"><span class="flock-tag '+tag+'">'+tagLbl+'</span>'+(f.status==='active'?'<button class="btn-sm" onclick="closeFlock(\''+f.id+'\')">Close batch</button>':'')+'</div></div></div>';
+    var pnlHtml=pnl!==null?'<div class="flock-sub" style="color:'+(pnl>=0?'var(--g2)':'var(--red)')+'">P&L: '+(pnl>=0?'+':'')+fmt(pnl)+'</div>':'';
+    return '<div class="flock-card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="flock-name">'+f.name+'</div><div class="flock-sub">'+f.count.toLocaleString()+' birds &middot; Started '+f.startDate+'</div><div class="flock-sub">'+fcrTxt+' &middot; Feed: '+fmt(spend)+'</div>'+(f.supplier?'<div class="flock-sub">Supplier: '+f.supplier+'</div>':'')+pnlHtml+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px"><span class="flock-tag '+tag+'">'+tagLbl+'</span>'+(f.status==='active'?'<button class="btn-sm" onclick="closeFlock(\''+f.id+'\')">Close &amp; P&L</button>':'')+'</div></div></div>';
   }).join('');
 }
 function populateSelects(){
@@ -776,6 +615,108 @@ function populateSelects(){
   ['fc-flock','fcr-flock','v-flock'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML=opts;});
   var lo='<option value="">— select flock —</option>'+active.filter(function(f){return f.type==='layer';}).map(function(f){return '<option value="'+f.id+'">'+f.name+'</option>';}).join('');
   var ef=document.getElementById('egg-flock');if(ef)ef.innerHTML=lo;
+}
+
+/* ── P&L MODAL ── */
+function showPnLModal(flock){
+  var spend=S.feeds.filter(function(e){return e.fid===flock.id;}).reduce(function(s,e){return s+e.cost;},0);
+  var existSale=S.sales.find(function(x){return x.fid===flock.id;});
+  document.getElementById('modal-root').innerHTML=
+    '<div class="modal-bg" onclick="closeModal(event)">'
+    +'<div class="modal-sheet">'
+    +'<button class="modal-close" onclick="closeModalDirect()">&#x2715;</button>'
+    +'<div class="modal-title">Close Batch &amp; Calculate P&L</div>'
+    +'<div class="modal-sub">'+flock.name+' &middot; '+flock.count.toLocaleString()+' birds &middot; Total feed spend: '+fmt(spend)+'</div>'
+    +'<div class="frow"><label class="flabel">Birds sold *</label><input type="number" id="pnl-count" placeholder="e.g. 488" value="'+(existSale?existSale.count:'')+'" oninput="calcPnL(\''+flock.id+'\','+spend+')"/></div>'
+    +'<div class="frow"><label class="flabel">Selling price per bird (₦) *</label><input type="number" id="pnl-price" placeholder="e.g. 4800" value="'+(existSale?existSale.pricePerBird:'')+'" oninput="calcPnL(\''+flock.id+'\','+spend+')"/></div>'
+    +'<div class="frow"><label class="flabel">Date sold</label><input type="date" id="pnl-date" value="'+td()+'"/></div>'
+    +'<div id="pnl-result"></div>'
+    +'<div class="btn-grid" style="margin-top:14px">'
+    +'<button class="btn btn-outline" onclick="closeModalDirect()">Cancel</button>'
+    +'<button class="btn btn-green" onclick="savePnL(\''+flock.id+'\','+spend+')">Save &amp; Close Batch</button>'
+    +'</div></div></div>';
+}
+function calcPnL(fid,spend){
+  var count=parseInt(document.getElementById('pnl-count').value)||0;
+  var price=parseFloat(document.getElementById('pnl-price').value)||0;
+  var el=document.getElementById('pnl-result');
+  if(!count||!price){el.innerHTML='';return;}
+  var revenue=count*price;
+  var pnl=revenue-spend;
+  var pnlPerBird=pnl/count;
+  var col=pnl>=0?'green':'red';
+  el.innerHTML='<div class="divider"></div>'
+    +'<div class="result-row"><span>Total revenue</span><span>'+fmt(revenue)+'</span></div>'
+    +'<div class="result-row"><span>Total feed cost</span><span>'+fmt(spend)+'</span></div>'
+    +'<div class="result-row"><span>Profit / Loss</span><span style="color:'+(pnl>=0?'var(--g2)':'var(--red)')+'">'+fmt(pnl)+'</span></div>'
+    +'<div class="pnl-profit '+col+'">'+(pnl>=0?'PROFIT: +':'LOSS: ')+fmt(pnl)+'<div style="font-size:14px;margin-top:4px">'+(pnl>=0?'+':'')+fmt(pnlPerBird)+' per bird</div></div>';
+}
+function savePnL(fid,spend){
+  if(isDemo){toast('Exit demo to save your data');return;}
+  var count=parseInt(document.getElementById('pnl-count').value)||0;
+  var price=parseFloat(document.getElementById('pnl-price').value)||0;
+  if(!count||!price){toast('Please enter birds sold and selling price');return;}
+  var revenue=count*price;
+  var existIdx=S.sales.findIndex(function(x){return x.fid===fid;});
+  var sale={id:'SL'+Date.now(),fid:fid,date:document.getElementById('pnl-date').value||td(),count:count,pricePerBird:price,totalRevenue:revenue};
+  if(existIdx>=0)S.sales[existIdx]=sale;else S.sales.push(sale);
+  var f=S.flocks.find(function(x){return x.id===fid;});
+  if(f){f.status='closed';f.soldDate=sale.date;}
+  save();renderFlocks();populateSelects();renderHome();closeModalDirect();
+  var pnl=revenue-spend;
+  toast((pnl>=0?'Batch closed! Profit: +':'Batch closed! Loss: ')+fmt(pnl));
+}
+function closeModal(e){if(e.target===e.currentTarget)closeModalDirect();}
+function closeModalDirect(){document.getElementById('modal-root').innerHTML='';}
+
+/* ── PAYSTACK UPGRADE MODAL ── */
+function showUpgradeModal(){
+  document.getElementById('modal-root').innerHTML=
+    '<div class="modal-bg" onclick="closeModal(event)">'
+    +'<div class="modal-sheet">'
+    +'<button class="modal-close" onclick="closeModalDirect()">&#x2715;</button>'
+    +'<div class="modal-title">Upgrade to Pro</div>'
+    +'<div class="modal-sub">Unlock unlimited batch history, P&L reports, PDF export and priority WhatsApp support.</div>'
+    +'<div class="plan-card selected" onclick="selectPlan(this,\'monthly\')">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center"><div class="plan-name">Monthly Pro<span class="plan-badge-pro">MOST POPULAR</span></div><div class="plan-price">₦1,500<span style="font-size:13px;color:var(--txt3)">/month</span></div></div>'
+    +'<div class="plan-features">✓ Unlimited flocks &nbsp; ✓ Full P&L per batch<br>✓ FCR history charts &nbsp; ✓ WhatsApp support</div>'
+    +'</div>'
+    +'<div class="plan-card" onclick="selectPlan(this,\'quarterly\')">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center"><div class="plan-name">Quarterly Pro</div><div class="plan-price">₦3,500<span style="font-size:13px;color:var(--txt3)">/3 months</span></div></div>'
+    +'<div class="plan-features">Everything in Monthly &nbsp; ✓ Save ₦1,000<br>✓ Founder discount — limited time</div>'
+    +'</div>'
+    +'<div style="background:var(--g4);border-radius:var(--rs);padding:10px 14px;margin:12px 0;font-size:13px;color:var(--g1);line-height:1.5">Think of it this way: if the app helps you save one bag of feed per batch by catching a poor FCR early, it has paid for 12 months of Pro subscription.</div>'
+    +'<button class="btn btn-green" onclick="payWithPaystack()" style="margin-bottom:10px">Pay with Paystack</button>'
+    +'<div style="text-align:center;font-size:12px;color:var(--txt3)">Secure payment via Paystack &middot; Nigerian cards, bank transfer &amp; USSD accepted</div>'
+    +'<div class="divider"></div>'
+    +'<div style="font-size:13px;color:var(--txt3);margin-bottom:8px">Or pay directly — send to my account and I will activate your Pro access:</div>'
+    +'<button class="btn btn-wa" onclick="payViaWhatsApp()" style="margin-bottom:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.5 2C6.262 2 2 6.262 2 11.5c0 1.67.435 3.235 1.195 4.594L2 22l6.093-1.178A9.447 9.447 0 0 0 11.5 21.999C16.739 22 21 17.738 21 12.5 21 7.262 16.739 3 11.5 3z"/></svg>Pay via WhatsApp (Bank Transfer)</button>'
+    +'</div></div>';
+}
+var selectedPlan='monthly';
+function selectPlan(el,plan){selectedPlan=plan;document.querySelectorAll('.plan-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');}
+function payWithPaystack(){
+  /* Replace YOUR_PAYSTACK_KEY and YOUR_EMAIL with your real values */
+  var amount=selectedPlan==='monthly'?150000:350000;
+  var handler=window.PaystackPop&&window.PaystackPop.setup({
+    key:'pk_live_YOUR_PAYSTACK_PUBLIC_KEY',
+    email:'customer@example.com',
+    amount:amount,
+    currency:'NGN',
+    ref:'PPG-'+Date.now(),
+    metadata:{plan:selectedPlan,farm:S.farmer.farm},
+    callback:function(response){closeModalDirect();toast('Payment successful! Ref: '+response.reference+'. WhatsApp us to activate Pro.');},
+    onClose:function(){}
+  });
+  if(handler){handler.openIframe();}else{
+    toast('Opening payment page...');
+    window.open('https://paystack.com/pay/poultrypro-ng','_blank');
+  }
+}
+function payViaWhatsApp(){
+  var plan=selectedPlan==='monthly'?'Monthly Pro (₦1,500)':'Quarterly Pro (₦3,500)';
+  var msg='Hello! I want to subscribe to Poultry Pro NG '+plan+'. My farm name is: '+S.farmer.farm+'. Please send me your account details.';
+  window.open('https://wa.me/2348000000000?text='+encodeURIComponent(msg),'_blank');
 }
 
 /* ── FEED ── */
@@ -793,13 +734,14 @@ function calcFeed(){
   document.getElementById('fc-kg').textContent=kg.toFixed(0)+' kg';
   document.getElementById('fc-pkg').textContent=fmt(total/kg)+'/kg';
   res.style.display='block';
+  document.getElementById('feed-share-row').style.display='flex';
 }
 function saveFeed(){
   if(isDemo){toast('Exit demo to save your own data');return;}
   var fid=document.getElementById('fc-flock').value;
   var bags=parseFloat(document.getElementById('fc-bags').value);
   var price=parseFloat(document.getElementById('fc-price').value);
-  if(!fid||!bags||!price){toast('Please fill all required fields');return;}
+  if(!fid||!bags||!price){toast('Please fill flock, bags and price');return;}
   var wt=parseFloat(document.getElementById('fc-wt').value)||25;
   S.feeds.push({id:'FE'+Date.now(),fid:fid,date:td(),type:document.getElementById('fc-type').value,bags:bags,price:price,wt:wt,cost:bags*price,kg:bags*wt});
   save();renderHome();
@@ -807,17 +749,33 @@ function saveFeed(){
   document.getElementById('feed-res').style.display='none';
   toast('Feed entry saved!');
 }
+function shareFeedResult(){
+  var total=document.getElementById('fc-total').textContent;
+  var perbird=document.getElementById('fc-bird').textContent;
+  var text='*Poultry Pro NG — Feed Cost Result*\n\nTotal feed spend: '+total+'\nCost per bird: '+perbird+'\n\nTracked with Poultry Pro NG — the app built for Nigerian farmers.\nTry it free: '+APP_URL;
+  openWA(text);
+}
+function copyFeedResult(){
+  var text='Feed spend: '+document.getElementById('fc-total').textContent+' | Cost/bird: '+document.getElementById('fc-bird').textContent;
+  copyText(text);
+}
 
-/* ── FCR / EFFICIENCY (CORRECTED FORMULA) ── */
-function toggleStandard(){
+/* ── FCR ── */
+function applyStandard(){
   var checked=document.getElementById('use-standard').checked;
   var week=parseInt(document.getElementById('fcr-week').value)||0;
-  if(checked&&week>0&&week<=6){
-    document.getElementById('fcr-wnow').value=STANDARD_WEIGHTS[week]||'';
-    document.getElementById('fcr-wlast').value=STANDARD_WEIGHTS[week-1]||0;
+  if(checked&&week>=1&&week<=6){
+    document.getElementById('fcr-wnow').value=COBB[week];
+    document.getElementById('fcr-wlast').value=COBB[week-1]||0;
+    document.getElementById('fcr-wnow').disabled=true;
+    document.getElementById('fcr-wlast').disabled=true;
     calcFCR();
+  } else {
+    document.getElementById('fcr-wnow').disabled=false;
+    document.getElementById('fcr-wlast').disabled=false;
   }
 }
+function toggleStandard(){if(document.getElementById('use-standard').checked)applyStandard();}
 function calcFCR(){
   var feed=parseFloat(document.getElementById('fcr-feed').value);
   var wnow=parseFloat(document.getElementById('fcr-wnow').value);
@@ -830,12 +788,12 @@ function calcFCR(){
   var fcr=feed/gainKg;
   document.getElementById('fcr-val').textContent=fcr.toFixed(2);
   document.getElementById('fcr-plain').textContent='For every 1kg your birds gained, you used '+fcr.toFixed(2)+'kg of feed.';
-  document.getElementById('fcr-gain').textContent='Total gain: '+gainKg.toFixed(1)+'kg ('+(wnow-wlast)+'g per bird)';
+  document.getElementById('fcr-gain').textContent='Total gain this week: '+gainKg.toFixed(1)+'kg ('+(wnow-wlast)+'g per bird)';
   var pill=document.getElementById('fcr-pill'),adv=document.getElementById('fcr-advice');
-  if(fcr<1.6){pill.className='pill green';pill.innerHTML='<span class="dot green"></span>Excellent';adv.className='result-box green';adv.textContent='Outstanding! Birds are converting feed very efficiently. Maintain your current feeding programme and pen management.';}
-  else if(fcr<1.8){pill.className='pill green';pill.innerHTML='<span class="dot green"></span>Good';adv.className='result-box green';adv.textContent='Good result. You are within the target range. Watch for heat stress in the afternoon — it quietly pushes feed efficiency down in Nigerian weather.';}
-  else if(fcr<2.0){pill.className='pill amber';pill.innerHTML='<span class="dot amber"></span>Watch this';adv.className='result-box amber';adv.textContent='Slightly above target. Check: feeder height (feed wastage?), water availability, ventilation, and verify feed protein levels in the Mix tab.';}
-  else{pill.className='pill red';pill.innerHTML='<span class="dot red"></span>Review now';adv.className='result-box red';adv.textContent='Feed efficiency is too poor. Check immediately: disease signs, feed quality, feeder and drinker ratios, and protein levels.';}
+  if(fcr<1.6){pill.className='pill green';pill.innerHTML='<span class="dot green"></span>Excellent';adv.className='result-box green';adv.textContent='Outstanding! Your birds are converting feed very efficiently. Maintain your current feeding programme and pen management.';}
+  else if(fcr<1.8){pill.className='pill green';pill.innerHTML='<span class="dot green"></span>Good';adv.className='result-box green';adv.textContent='Good result. Within the target range. Watch for afternoon heat stress — it quietly pushes feed efficiency down in Nigerian weather.';}
+  else if(fcr<2.0){pill.className='pill amber';pill.innerHTML='<span class="dot amber"></span>Watch this';adv.className='result-box amber';adv.textContent='Slightly above target. Check feeder height (wastage?), water availability, pen ventilation, and verify protein levels in the Mix tab.';}
+  else{pill.className='pill red';pill.innerHTML='<span class="dot red"></span>Review now';adv.className='result-box red';adv.textContent='Feed efficiency too poor. Check immediately: disease signs, feed quality, feeder and drinker ratios, and protein levels.';}
   renderFCRChart(document.getElementById('fcr-flock').value,fcr);
   res.style.display='block';
 }
@@ -847,7 +805,7 @@ function renderFCRChart(fid,cur){
   document.getElementById('fcr-chart').innerHTML=pts.map(function(p){
     var pct=Math.round((p.v/max)*100);
     var col=p.v<1.8?'#2E7D32':p.v<2.0?'#E65100':'#C62828';
-    return '<div class="bar-col"><div class="bar-block" style="height:'+pct+'%;background:'+col+(p.cur?';outline:2px solid var(--txt);outline-offset:1px':'')+';"></div><div class="bar-lbl">'+p.v.toFixed(1)+'</div><div class="bar-lbl">'+p.l+'</div></div>';
+    return '<div class="bar-col"><div class="bar-block" style="height:'+pct+'%;background:'+col+(p.cur?';outline:2px solid #333;outline-offset:1px':'')+'"></div><div class="bar-lbl">'+p.v.toFixed(1)+'</div><div class="bar-lbl">'+p.l+'</div></div>';
   }).join('');
 }
 function saveFCR(){
@@ -858,11 +816,23 @@ function saveFCR(){
   var wnow=parseFloat(document.getElementById('fcr-wnow').value);
   var wlast=parseFloat(document.getElementById('fcr-wlast').value)||0;
   var birds=parseFloat(document.getElementById('fcr-birds').value);
-  if(!fid||!week||!feed||!wnow||!birds){toast('Please fill all required fields');return;}
+  if(!fid||!week||!feed||!wnow||!birds){toast('Please fill all fields');return;}
   var gainKg=((wnow-wlast)/1000)*birds;
   if(gainKg<=0){toast('Weight this week must be higher than last week');return;}
   S.fcrs.push({id:'FCR'+Date.now(),fid:fid,week:week,date:td(),feed:feed,wnow:wnow,wlast:wlast,birds:birds,fcr:parseFloat((feed/gainKg).toFixed(2))});
   save();renderHome();toast('Efficiency entry saved!');
+}
+function shareFCRResult(){
+  var val=document.getElementById('fcr-val').textContent;
+  var plain=document.getElementById('fcr-plain').textContent;
+  var flock=document.getElementById('fcr-flock');
+  var flockName=flock.options[flock.selectedIndex]?flock.options[flock.selectedIndex].text:'my flock';
+  var week=document.getElementById('fcr-week').value;
+  var text='*Poultry Pro NG — Feed Efficiency Result*\n\nFlock: '+flockName+' | Week '+week+'\nFCR: '+val+'\n'+plain+'\n\nTracked with Poultry Pro NG — the app built for Nigerian farmers.\nTry it free: '+APP_URL;
+  openWA(text);
+}
+function copyFCRResult(){
+  copyText('FCR: '+document.getElementById('fcr-val').textContent+' | '+document.getElementById('fcr-plain').textContent);
 }
 
 /* ── EGGS ── */
@@ -881,9 +851,9 @@ function calcEggs(){
   document.getElementById('egg-crates').textContent=crates.toFixed(1);
   document.getElementById('egg-rev').textContent=price?fmt(rev):'—';
   var sb=document.getElementById('egg-status');
-  if(hdp>=75){sb.className='result-box green';sb.textContent='Excellent! HDP above 75%. Keep lighting at 16 hrs/day, maintain calcium in feed (limestone/oyster shell), and fresh water always.';}
-  else if(hdp>=65){sb.className='result-box amber';sb.textContent='Below peak. Check calcium levels (need 3.8–4% in feed), lighting hours (16 hrs), water, and watch for early moulting signs.';}
-  else{sb.className='result-box red';sb.textContent='Critically low production. Investigate immediately: disease, calcium deficiency, heat stress, or involuntary moulting.';}
+  if(hdp>=75){sb.className='result-box green';sb.textContent='Excellent! HDP above 75%. Keep lighting at 16 hrs/day, maintain calcium in feed, and fresh water always.';}
+  else if(hdp>=65){sb.className='result-box amber';sb.textContent='Below peak. Check calcium levels (need 3.8–4%), lighting hours (16 hrs), water, and watch for early moulting signs.';}
+  else{sb.className='result-box red';sb.textContent='Critically low. Investigate immediately: disease, calcium deficiency, heat stress, or involuntary moulting.';}
   res.style.display='block';
 }
 function saveEgg(){
@@ -893,7 +863,8 @@ function saveEgg(){
   var col=parseFloat(document.getElementById('egg-col').value);
   if(!fid||!hens||isNaN(col)){toast('Please fill flock, hens and eggs fields');return;}
   var entry={id:'EG'+Date.now(),fid:fid,date:td(),hens:hens,col:col,crack:parseFloat(document.getElementById('egg-crack').value)||0,price:parseFloat(document.getElementById('egg-price').value)||0,hdp:parseFloat(((col/hens)*100).toFixed(1))};
-  S.eggs.push(entry);save();renderHome();renderEggChart(fid);toast('Egg record saved! HDP: '+entry.hdp+'%');
+  S.eggs.push(entry);save();renderHome();renderEggChart(fid);
+  toast('Egg record saved! HDP: '+entry.hdp+'%');
 }
 function renderEggChart(fid){
   var logs=S.eggs.filter(function(l){return l.fid===fid;}).slice(-7);
@@ -906,6 +877,19 @@ function renderEggChart(fid){
     var col=l.hdp>=75?'#2E7D32':l.hdp>=65?'#E65100':'#C62828';
     return '<div class="bar-col"><div class="bar-block" style="height:'+pct+'%;background:'+col+'"></div><div class="bar-lbl">'+l.col+'</div><div class="bar-lbl">'+l.date.slice(5)+'</div></div>';
   }).join('');
+}
+function shareEggResult(){
+  var hdp=document.getElementById('egg-hdp').textContent;
+  var good=document.getElementById('egg-good').textContent;
+  var crates=document.getElementById('egg-crates').textContent;
+  var rev=document.getElementById('egg-rev').textContent;
+  var flock=document.getElementById('egg-flock');
+  var flockName=flock.options[flock.selectedIndex]?flock.options[flock.selectedIndex].text:'my layers';
+  var text='*Poultry Pro NG — Egg Production Result*\n\nFlock: '+flockName+'\nHDP: '+hdp+' | Good eggs: '+good+' | Crates: '+crates+(rev&&rev!='—'?'\nDay revenue: '+rev:'')+'\n\nTracked with Poultry Pro NG — built for Nigerian farmers.\nTry it free: '+APP_URL;
+  openWA(text);
+}
+function copyEggResult(){
+  copyText('HDP: '+document.getElementById('egg-hdp').textContent+' | Eggs: '+document.getElementById('egg-good').textContent+' | Crates: '+document.getElementById('egg-crates').textContent);
 }
 
 /* ── VACCINATION ── */
@@ -936,39 +920,58 @@ function renderVacc(){
 
 /* ── HOME ── */
 function renderHome(){
-  renderDemoExit();
+  renderDemoBanner();
   var active=S.flocks.filter(function(f){return f.status==='active';});
   var birds=active.reduce(function(s,f){return s+f.count;},0);
-  var feed=S.feeds.reduce(function(s,e){return s+e.cost;},0);
+  var feedTotal=S.feeds.reduce(function(s,e){return s+e.cost;},0);
   var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
   var cs=cutoff.toISOString().split('T')[0];
   var eggs=S.eggs.filter(function(l){return l.date>=cs;}).reduce(function(s,l){return s+l.col;},0);
   document.getElementById('hm-flocks').textContent=active.length;
   document.getElementById('hm-birds').textContent=birds.toLocaleString();
-  document.getElementById('hm-feed').textContent=fmt(feed);
+  document.getElementById('hm-feed').textContent=fmt(feedTotal);
   document.getElementById('hm-eggs').textContent=eggs.toLocaleString();
   document.getElementById('home-empty').style.display=(!S.flocks.length)?'block':'none';
-  var fc=document.getElementById('home-fcr');
+
+  /* Latest FCR */
+  var fc=document.getElementById('home-fcr-card');
   if(S.fcrs.length){
     var last=S.fcrs[S.fcrs.length-1];
     var fl=S.flocks.find(function(f){return f.id===last.fid;});
     var col=last.fcr<1.8?'green':last.fcr<2.0?'amber':'red';
-    var lbl=last.fcr<1.8?'Good':last.fcr<2.0?'Watch this':'Review now';
-    fc.innerHTML='<div class="card"><div class="card-label">Latest feed efficiency</div><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:32px;font-weight:700">'+last.fcr+'</div><div style="font-size:12px;color:var(--txt3);margin-top:4px">'+(fl?fl.name:'')+' &middot; Week '+last.week+'</div><div style="font-size:12px;color:var(--txt2);margin-top:3px">Used '+last.fcr+'kg feed per 1kg gained</div></div><span class="pill '+col+'"><span class="dot '+col+'"></span>'+lbl+'</span></div></div>';
+    fc.innerHTML='<div class="card"><div class="card-label">Latest feed efficiency</div><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:32px;font-weight:700">'+last.fcr+'</div><div style="font-size:12px;color:var(--txt3);margin-top:3px">'+(fl?fl.name:'')+' &middot; Week '+last.week+'</div><div style="font-size:13px;color:var(--txt2);margin-top:3px">Used '+last.fcr+'kg feed per 1kg gained</div></div><span class="pill '+col+'"><span class="dot '+col+'"></span>'+(last.fcr<1.8?'Good':last.fcr<2.0?'Watch this':'Review now')+'</span></div></div>';
   } else {fc.innerHTML='';}
-  var va=document.getElementById('home-vacc');
+
+  /* P&L summary for closed batches */
+  var closed=S.flocks.filter(function(f){return f.status==='closed';});
+  var pnlCard=document.getElementById('home-pnl-card');
+  if(closed.length){
+    var totalProfit=0;var hasSales=false;
+    closed.forEach(function(f){
+      var sale=S.sales.find(function(x){return x.fid===f.id;});
+      var spend=S.feeds.filter(function(e){return e.fid===f.id;}).reduce(function(s,e){return s+e.cost;},0);
+      if(sale){totalProfit+=(sale.totalRevenue-spend);hasSales=true;}
+    });
+    if(hasSales){
+      var col2=totalProfit>=0?'green':'red';
+      pnlCard.innerHTML='<div class="card"><div class="card-label">Total P&L (all closed batches)</div><div class="pnl-profit '+col2+'" style="margin-top:4px">'+(totalProfit>=0?'Total Profit: +':'Total Loss: ')+fmt(totalProfit)+'</div></div>';
+    } else {pnlCard.innerHTML='';}
+  } else {pnlCard.innerHTML='';}
+
+  /* Vacc alerts */
   var today=td();
   var due=S.vaccs.filter(function(v){return v.nextDate&&v.nextDate<=today;});
+  var va=document.getElementById('vacc-alert-zone');
   if(due.length){
     var fl2=S.flocks.find(function(f){return f.id===due[0].fid;});
     va.innerHTML='<div class="alert"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Vaccination due: <b>'+due[0].name+'</b>'+(fl2?' for '+fl2.name:'')+'</div>';
   } else {va.innerHTML='';}
 }
 
-/* ── FORMULATOR ── */
+/* ── MIX ── */
 function buildIngr(){
   document.getElementById('ingr-list').innerHTML=INGR.map(function(ing,i){
-    return '<div class="ingr-row"><span class="ingr-name">'+ing.n+'</span><input type="number" class="ingr-qty" data-i="'+i+'" placeholder="0" min="0" step="0.5" oninput="calcMix()"/><span class="ingr-cp">'+ing.cp+'%</span></div>';
+    return '<div class="ingr-row"><span style="font-size:13px;color:var(--txt)">'+ing.n+'</span><input type="number" class="ingr-qty" data-i="'+i+'" placeholder="0" min="0" step="0.5" oninput="calcMix()"/><span style="font-size:12px;color:var(--txt3);text-align:right">'+ing.cp+'%</span></div>';
   }).join('');
 }
 function setUnit(u){
@@ -990,23 +993,20 @@ function calcMix(){
   });
   var res=document.getElementById('mix-res');
   if(tw<0.1){res.style.display='none';return;}
-  var cp=tcp/tw;
-  var type=document.getElementById('mix-type').value;
-  var target=TARGETS[type];
+  var cp=tcp/tw,target=TARGETS[document.getElementById('mix-type').value];
   document.getElementById('mix-cp').textContent=cp.toFixed(1)+'%';
   document.getElementById('mix-tot').textContent=tw.toFixed(1)+' kg';
   var ratio=Math.min((cp/target)*100,100);
   var bar=document.getElementById('mix-bar');
   bar.style.width=ratio.toFixed(0)+'%';
-  bar.style.background=cp>=target?'#2E7D32':cp>=target*0.9?'#E65100':'#C62828';
+  bar.style.background=cp>=target?'#2E7D32':cp>=target*.9?'#E65100':'#C62828';
   document.getElementById('mix-prog-pct').textContent=cp.toFixed(1)+'% of '+target+'% target';
-  var diff=(cp-target).toFixed(1);
-  var st=document.getElementById('mix-status');
-  if(cp>=target){st.className='result-box green';st.textContent='Good mix! Protein target met. Suitable for your selected feed type. Ensure premix and calcium are included.';}
-  else if(cp>=target*0.9){st.className='result-box amber';st.textContent='Almost — '+Math.abs(diff)+'% below target. Add more soybean meal or groundnut cake.';}
-  else{st.className='result-box red';st.textContent='Protein too low by '+Math.abs(diff)+'%. Reduce maize, increase soybean meal or groundnut cake significantly.';}
+  var diff=(cp-target).toFixed(1),st=document.getElementById('mix-status');
+  if(cp>=target){st.className='result-box green';st.textContent='Good mix! Protein target met. Ensure premix and calcium are included.';}
+  else if(cp>=target*.9){st.className='result-box amber';st.textContent='Almost — '+Math.abs(diff)+'% below target. Add more soybean meal or groundnut cake.';}
+  else{st.className='result-box red';st.textContent='Protein too low by '+Math.abs(diff)+'%. Reduce maize, increase soybean meal or groundnut cake.';}
   var cost=document.getElementById('mix-cost');
-  if(tc>0){cost.style.display='block';cost.textContent='Estimated cost: '+fmt(tc)+' for '+tw.toFixed(0)+'kg ('+fmt(tc/tw*50)+' per 50kg equivalent)';}
+  if(tc>0){cost.style.display='block';cost.textContent='Est. cost: '+fmt(tc)+' for '+tw.toFixed(0)+'kg ('+fmt(tc/tw*50)+' per 50kg equivalent)';}
   else{cost.style.display='none';}
   res.style.display='block';
 }
@@ -1016,8 +1016,15 @@ function loadSample(){
   calcMix();
 }
 
+/* ── WHATSAPP SHARE ── */
+function openWA(text){window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');}
+function copyText(text){
+  if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){toast('Copied to clipboard!');});}
+  else{var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Copied!');}
+}
+
 /* ── BOOT ── */
-if(S.farmer.name){launchApp();}
+if(S.farmer.name){launch();}
 </script>
 </body>
 </html>
