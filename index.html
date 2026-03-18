@@ -268,6 +268,7 @@ input.err{border-color:var(--red)}
     <div style="display:flex;align-items:center;gap:8px">
       <span id="plan-badge" class="plan-badge">FREE</span>
       <button id="pro-btn" onclick="showUpgradeModal()" style="background:var(--gold);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--g1);cursor:pointer;font-family:var(--font)">Upgrade Pro</button>
+      <button onclick="showSettingsModal()" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center">&#9881;</button>
     </div>
   </div>
   <div class="nav">
@@ -516,12 +517,14 @@ var SAMPLES={starter:[55,28,0,5,4,5,1.5,0.75,0.25,0.25],finisher:[60,22,6,0,3,6,
 var COBB=[0,175,420,850,1400,1900,2400];
 var APP_URL='https://poultrypro-ng.netlify.app';
 
-function db(k,v){if(v===undefined){try{var r=localStorage.getItem('ppng4_'+k);return r?JSON.parse(r):null}catch(e){return null}}try{localStorage.setItem('ppng4_'+k,JSON.stringify(v))}catch(e){}}
+function db(k,v){if(v===undefined){try{var r=localStorage.getItem('ppng4_'+k);return r?JSON.parse(r):null}catch(e){return null}}try{localStorage.setItem('ppng4_'+k,JSON.stringify(v));}catch(e){if(e.name==='QuotaExceededError'||e.code===22){toast('Storage full! Tap Settings to export and backup your data.');}}}
 var isDemo=false;
 var S={farmer:db('farmer')||{name:'',farm:''},flocks:db('flocks')||[],feeds:db('feeds')||[],fcrs:db('fcrs')||[],eggs:db('eggs')||[],vaccs:db('vaccs')||[],sales:db('sales')||[],unit:'kg'};
 
 /* ── PRO GATING ── */
 var FREE_LIMITS={maxActiveFlocks:2,maxFeedEntries:10,maxBatchHistory:3,fcrHistoryWeeks:4};
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function isPro(){
   var exp=db('proExpiry');
   if(!exp)return false;
@@ -603,8 +606,20 @@ function launch(){
   document.getElementById('home-date').textContent=new Date().toLocaleDateString('en-NG',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   updatePlanBadge();
   buildIngr();populateSelects();renderHome();renderFlocks();renderVacc();
-  document.getElementById('f-date').value=td();document.getElementById('v-date').value=td();
+  var today=td();
+  document.querySelectorAll('input[type=date]').forEach(function(d){d.max=today;});
+  document.getElementById('f-date').value=today;
+  document.getElementById('v-date').value=today;
   if(isDemo)renderEggChart('DF2');
+  /* Backup reminder: if Pro and last backup > 7 days ago */
+  if(isPro()&&S.flocks.length>0){
+    var lastBackup=db('lastBackupDate');
+    if(!lastBackup){
+      var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
+      var js=S.eggs.concat(S.fcrs).filter(function(e){return new Date(e.date||'2000')>cutoff;});
+      if(js.length>0)setTimeout(function(){toast('Tip: Back up your farm data in Settings ⚙');},3000);
+    }
+  }
 }
 function var_amb(){return '#E65100';}
 
@@ -672,7 +687,7 @@ function renderFlocks(){
     var tag=f.status==='closed'?'closed':f.type;
     var tagLbl=f.status==='closed'?'Closed':f.type.charAt(0).toUpperCase()+f.type.slice(1);
     var pnlHtml=pnl!==null?'<div class="flock-sub" style="color:'+(pnl>=0?'var(--g2)':'var(--red)')+'">P&L: '+(pnl>=0?'+':'')+fmt(pnl)+'</div>':'';
-    return '<div class="flock-card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="flock-name">'+f.name+'</div><div class="flock-sub">'+f.count.toLocaleString()+' birds &middot; Started '+f.startDate+'</div><div class="flock-sub">'+fcrTxt+' &middot; Feed: '+fmt(spend)+'</div>'+(f.supplier?'<div class="flock-sub">Supplier: '+f.supplier+'</div>':'')+pnlHtml+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px"><span class="flock-tag '+tag+'">'+tagLbl+'</span>'+(f.status==='active'?'<button class="btn-sm" onclick="closeFlock(\''+f.id+'\')">Close &amp; P&L</button>':'')+'</div></div></div>';
+    return '<div class="flock-card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="flock-name">'+esc(f.name)+'</div><div class="flock-sub">'+f.count.toLocaleString()+' birds &middot; Started '+esc(f.startDate)+'</div><div class="flock-sub">'+esc(fcrTxt)+' &middot; Feed: '+fmt(spend)+'</div>'+(f.supplier?'<div class="flock-sub">Supplier: '+esc(f.supplier)+'</div>':'')+pnlHtml+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px"><span class="flock-tag '+tag+'">'+tagLbl+'</span>'+(f.status==='active'?'<button class="btn-sm" onclick="closeFlock(\''+f.id+'\')">Close &amp; P&L</button>':'')+'</div></div></div>';
   }).join('');
   if(hiddenCount>0){
     html+='<div onclick="showUpgradeModal()" style="text-align:center;padding:12px;border:.5px solid var(--border);border-radius:var(--r);background:var(--bg2);cursor:pointer;margin-bottom:8px">'
@@ -692,9 +707,9 @@ function renderFlocks(){
 }
 function populateSelects(){
   var active=S.flocks.filter(function(f){return f.status==='active';});
-  var opts='<option value="">— select flock —</option>'+active.map(function(f){return '<option value="'+f.id+'">'+f.name+'</option>';}).join('');
+  var opts='<option value="">— select flock —</option>'+active.map(function(f){return '<option value="'+f.id+'">'+esc(f.name)+'</option>';}).join('');
   ['fc-flock','fcr-flock','v-flock'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML=opts;});
-  var lo='<option value="">— select flock —</option>'+active.filter(function(f){return f.type==='layer';}).map(function(f){return '<option value="'+f.id+'">'+f.name+'</option>';}).join('');
+  var lo='<option value="">— select flock —</option>'+active.filter(function(f){return f.type==='layer';}).map(function(f){return '<option value="'+f.id+'">'+esc(f.name)+'</option>';}).join('');
   var ef=document.getElementById('egg-flock');if(ef)ef.innerHTML=lo;
 }
 
@@ -707,7 +722,7 @@ function showPnLModal(flock){
     +'<div class="modal-sheet">'
     +'<button class="modal-close" onclick="closeModalDirect()">&#x2715;</button>'
     +'<div class="modal-title">Close Batch &amp; Calculate P&L</div>'
-    +'<div class="modal-sub">'+flock.name+' &middot; '+flock.count.toLocaleString()+' birds &middot; Total feed spend: '+fmt(spend)+'</div>'
+    +'<div class="modal-sub">'+esc(flock.name)+' &middot; '+flock.count.toLocaleString()+' birds &middot; Total feed spend: '+fmt(spend)+'</div>'
     +'<div class="frow"><label class="flabel">Birds sold *</label><input type="number" id="pnl-count" placeholder="e.g. 488" value="'+(existSale?existSale.count:'')+'" oninput="calcPnL(\''+flock.id+'\','+spend+')"/></div>'
     +'<div class="frow"><label class="flabel">Selling price per bird (₦) *</label><input type="number" id="pnl-price" placeholder="e.g. 4800" value="'+(existSale?existSale.pricePerBird:'')+'" oninput="calcPnL(\''+flock.id+'\','+spend+')"/></div>'
     +'<div class="frow"><label class="flabel">Date sold</label><input type="date" id="pnl-date" value="'+td()+'"/></div>'
@@ -932,8 +947,8 @@ function calcEggs(){
   var crack=parseFloat(document.getElementById('egg-crack').value)||0;
   var price=parseFloat(document.getElementById('egg-price').value)||0;
   var res=document.getElementById('egg-res');
-  if(!hens||isNaN(col)){res.style.display='none';return;}
-  var hdp=(col/hens)*100,good=col-crack,crates=good/30,rev=crates*price;
+  if(!hens||hens<=0||isNaN(col)||col<0){res.style.display='none';return;}
+  var crack2=Math.min(crack,col);var hdp=(col/hens)*100,good=Math.max(0,col-crack2),crates=good/30,rev=crates*price;
   var hdpEl=document.getElementById('egg-hdp');
   hdpEl.textContent=hdp.toFixed(1)+'%';
   hdpEl.className='metric-value'+(hdp>=75?' green':hdp>=65?' amber':' red');
@@ -1004,7 +1019,7 @@ function renderVacc(){
   el.innerHTML=S.vaccs.slice().reverse().map(function(v){
     var f=S.flocks.find(function(x){return x.id===v.fid;});
     var due=v.nextDate&&v.nextDate<=today;
-    return '<div class="vacc-row"><div><div class="vacc-name">'+v.name+'</div><div class="vacc-sub">'+(f?f.name:'Unknown')+' &middot; Given: '+v.date+(v.nextDate?' &middot; Next: '+v.nextDate:'')+'</div>'+(v.notes?'<div class="vacc-sub">'+v.notes+'</div>':'')+'</div>'+(due?'<span class="pill red"><span class="dot red"></span>Due!</span>':'<span class="pill green"><span class="dot green"></span>Done</span>')+'</div>';
+    return '<div class="vacc-row"><div><div class="vacc-name">'+esc(v.name)+'</div><div class="vacc-sub">'+esc(f?f.name:'Unknown')+' &middot; Given: '+esc(v.date)+(v.nextDate?' &middot; Next: '+esc(v.nextDate):'')+'</div>'+(v.notes?'<div class="vacc-sub">'+esc(v.notes)+'</div>':'')+'</div>'+(due?'<span class="pill red"><span class="dot red"></span>Due!</span>':'<span class="pill green"><span class="dot green"></span>Done</span>')+'</div>';
   }).join('');
 }
 
@@ -1029,7 +1044,7 @@ function renderHome(){
     var last=S.fcrs[S.fcrs.length-1];
     var fl=S.flocks.find(function(f){return f.id===last.fid;});
     var col=last.fcr<1.8?'green':last.fcr<2.0?'amber':'red';
-    fc.innerHTML='<div class="card"><div class="card-label">Latest feed efficiency</div><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:32px;font-weight:700">'+last.fcr+'</div><div style="font-size:12px;color:var(--txt3);margin-top:3px">'+(fl?fl.name:'')+' &middot; Week '+last.week+'</div><div style="font-size:13px;color:var(--txt2);margin-top:3px">Used '+last.fcr+'kg feed per 1kg gained</div></div><span class="pill '+col+'"><span class="dot '+col+'"></span>'+(last.fcr<1.8?'Good':last.fcr<2.0?'Watch this':'Review now')+'</span></div></div>';
+    fc.innerHTML='<div class="card"><div class="card-label">Latest feed efficiency</div><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:32px;font-weight:700">'+last.fcr+'</div><div style="font-size:12px;color:var(--txt3);margin-top:3px">'+esc(fl?fl.name:'')+' &middot; Week '+last.week+'</div><div style="font-size:13px;color:var(--txt2);margin-top:3px">Used '+last.fcr+'kg feed per 1kg gained</div></div><span class="pill '+col+'"><span class="dot '+col+'"></span>'+(last.fcr<1.8?'Good':last.fcr<2.0?'Watch this':'Review now')+'</span></div></div>';
   } else {fc.innerHTML='';}
 
   /* P&L summary for closed batches */
@@ -1054,7 +1069,7 @@ function renderHome(){
   var va=document.getElementById('vacc-alert-zone');
   if(due.length){
     var fl2=S.flocks.find(function(f){return f.id===due[0].fid;});
-    va.innerHTML='<div class="alert"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Vaccination due: <b>'+due[0].name+'</b>'+(fl2?' for '+fl2.name:'')+'</div>';
+    va.innerHTML='<div class="alert"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Vaccination due: <b>'+esc(due[0].name)+'</b>'+(fl2?' for '+esc(fl2.name):'')+'</div>';
   } else {va.innerHTML='';}
 }
 
@@ -1113,7 +1128,94 @@ function copyText(text){
   else{var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Copied!');}
 }
 
+/* ── DATA BACKUP & RESTORE ── */
+function exportData(){
+  if(isDemo){toast('Exit demo to export your own data');return;}
+  var data={version:1,exported:new Date().toISOString(),farmer:S.farmer,flocks:S.flocks,feeds:S.feeds,fcrs:S.fcrs,eggs:S.eggs,vaccs:S.vaccs,sales:S.sales};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='PoultryProNG_Backup_'+td()+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Backup downloaded! Save it somewhere safe.');
+}
+function importData(input){
+  if(isDemo){toast('Exit demo to restore your own data');return;}
+  var file=input.files[0];
+  if(!file){return;}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      if(!data.flocks||!data.farmer){toast('Invalid backup file');return;}
+      if(!confirm('This will replace ALL your current farm data with the backup. Are you sure?')){return;}
+      S.farmer=data.farmer||S.farmer;
+      S.flocks=data.flocks||[];
+      S.feeds=data.feeds||[];
+      S.fcrs=data.fcrs||[];
+      S.eggs=data.eggs||[];
+      S.vaccs=data.vaccs||[];
+      S.sales=data.sales||[];
+      save();
+      document.getElementById('topbar-farm').textContent=S.farmer.farm||'My Farm';
+      document.getElementById('home-name').textContent=S.farmer.name||'Farmer';
+      populateSelects();renderHome();renderFlocks();renderVacc();
+      closeModalDirect();
+      toast('Backup restored! All your farm data is back.');
+    }catch(err){
+      toast('Could not read backup file. Make sure it is a valid Poultry Pro NG backup.');
+    }
+  };
+  reader.readAsText(file);
+}
+function showSettingsModal(){
+  document.getElementById('modal-root').innerHTML=
+    '<div class="modal-bg" onclick="closeModal(event)">'\
+    +'<div class="modal-sheet">'\
+    +'<button class="modal-close" onclick="closeModalDirect()">&#x2715;</button>'\
+    +'<div class="modal-title">Farm Settings</div>'\
+    +'<div class="modal-sub" style="margin-bottom:16px">'+esc(S.farmer.name)+' &middot; '+esc(S.farmer.farm)+'</div>'\
+    +'<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;font-size:11px">Data backup</div>'\
+    +'<div style="background:var(--bg2);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:13px;color:var(--txt2);line-height:1.6">Your data lives on this phone only. If you switch phones or clear your browser, you will lose everything. Download a backup regularly.</div>'\
+    +'<button class="btn btn-green" onclick="exportData()" style="margin-bottom:10px">Download backup (.json file)</button>'\
+    +'<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px">Restore from backup</div>'\
+    +'<label style="display:block;width:100%;padding:11px;background:transparent;border:1.5px solid var(--g1);color:var(--g1);border-radius:8px;font-size:14px;font-weight:600;text-align:center;cursor:pointer">'\
+    +'Choose backup file'\
+    +'<input type="file" accept=".json" onchange="importData(this)" style="display:none"/>'\
+    +'</label>'\
+    +'<div class="divider" style="margin:16px 0"></div>'\
+    +'<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px">Update farm name</div>'\
+    +'<input type="text" id="settings-farm" value="'+esc(S.farmer.farm)+'" placeholder="Farm name" style="margin-bottom:8px"/>'\
+    +'<input type="text" id="settings-name" value="'+esc(S.farmer.name)+'" placeholder="Your name" style="margin-bottom:10px"/>'\
+    +'<button class="btn btn-green" onclick="saveSettings()">Save changes</button>'\
+    +'</div></div>';
+}
+function saveSettings(){
+  var farm=document.getElementById('settings-farm').value.trim();
+  var name=document.getElementById('settings-name').value.trim();
+  if(farm)S.farmer.farm=farm;
+  if(name)S.farmer.name=name;
+  save();
+  document.getElementById('topbar-farm').textContent=S.farmer.farm;
+  document.getElementById('home-name').textContent=S.farmer.name;
+  closeModalDirect();
+  toast('Settings saved!');
+}
+
 /* ── BOOT ── */
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('/sw.js').catch(function(){});
+  });
+}
+
+
+window.addEventListener('online',function(){toast('Back online — all your data is safe.');});
+window.addEventListener('offline',function(){toast('No internet — app still works offline. Your data is saving.');});
+
 if(S.farmer.name){launch();}
 </script>
 </body>
