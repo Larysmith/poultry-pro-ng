@@ -1171,26 +1171,26 @@ function importData(input){
   reader.readAsText(file);
 }
 function showSettingsModal(){
-  document.getElementById('modal-root').innerHTML=
-    '<div class="modal-bg" onclick="closeModal(event)">'\
-    +'<div class="modal-sheet">'\
-    +'<button class="modal-close" onclick="closeModalDirect()">&#x2715;</button>'\
-    +'<div class="modal-title">Farm Settings</div>'\
-    +'<div class="modal-sub" style="margin-bottom:16px">'+esc(S.farmer.name)+' &middot; '+esc(S.farmer.farm)+'</div>'\
-    +'<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;font-size:11px">Data backup</div>'\
-    +'<div style="background:var(--bg2);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:13px;color:var(--txt2);line-height:1.6">Your data lives on this phone only. If you switch phones or clear your browser, you will lose everything. Download a backup regularly.</div>'\
-    +'<button class="btn btn-green" onclick="exportData()" style="margin-bottom:10px">Download backup (.json file)</button>'\
-    +'<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px">Restore from backup</div>'\
-    +'<label style="display:block;width:100%;padding:11px;background:transparent;border:1.5px solid var(--g1);color:var(--g1);border-radius:8px;font-size:14px;font-weight:600;text-align:center;cursor:pointer">'\
-    +'Choose backup file'\
-    +'<input type="file" accept=".json" onchange="importData(this)" style="display:none"/>'\
-    +'</label>'\
-    +'<div class="divider" style="margin:16px 0"></div>'\
-    +'<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px">Update farm name</div>'\
-    +'<input type="text" id="settings-farm" value="'+esc(S.farmer.farm)+'" placeholder="Farm name" style="margin-bottom:8px"/>'\
-    +'<input type="text" id="settings-name" value="'+esc(S.farmer.name)+'" placeholder="Your name" style="margin-bottom:10px"/>'\
-    +'<button class="btn btn-green" onclick="saveSettings()">Save changes</button>'\
-    +'</div></div>';
+  var html='<div class="modal-bg" onclick="closeModal(event)">';
+  html+='<div class="modal-sheet">';
+  html+='<button class="modal-close" onclick="closeModalDirect()">&#x2715;</button>';
+  html+='<div class="modal-title">Farm Settings</div>';
+  html+='<div class="modal-sub" style="margin-bottom:16px">'+esc(S.farmer.name)+' &middot; '+esc(S.farmer.farm)+'</div>';
+  html+='<div style="font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Data backup</div>';
+  html+='<div style="background:var(--bg2);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:13px;color:var(--txt2);line-height:1.6">Your data lives on this phone only. If you switch phones or clear your browser, you will lose everything. Download a backup regularly.</div>';
+  html+='<button class="btn btn-green" onclick="exportData()" style="margin-bottom:10px">Download backup (.json file)</button>';
+  html+='<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px">Restore from backup</div>';
+  html+='<label style="display:block;width:100%;padding:11px;background:transparent;border:1.5px solid var(--g1);color:var(--g1);border-radius:8px;font-size:14px;font-weight:600;text-align:center;cursor:pointer">';
+  html+='Choose backup file';
+  html+='<input type="file" accept=".json" onchange="importData(this)" style="display:none"/>';
+  html+='</label>';
+  html+='<div style="height:.5px;background:var(--border);margin:16px 0"></div>';
+  html+='<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px">Update farm name</div>';
+  html+='<input type="text" id="settings-farm" value="'+esc(S.farmer.farm)+'" placeholder="Farm name" style="margin-bottom:8px"/>';
+  html+='<input type="text" id="settings-name" value="'+esc(S.farmer.name)+'" placeholder="Your name" style="margin-bottom:10px"/>';
+  html+='<button class="btn btn-green" onclick="saveSettings()">Save changes</button>';
+  html+='</div></div>';
+  document.getElementById('modal-root').innerHTML=html;
 }
 function saveSettings(){
   var farm=document.getElementById('settings-farm').value.trim();
