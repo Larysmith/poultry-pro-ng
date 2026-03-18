@@ -267,7 +267,7 @@ input.err{border-color:var(--red)}
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <span id="plan-badge" class="plan-badge">FREE</span>
-      <button onclick="showUpgradeModal()" style="background:var(--gold);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--g1);cursor:pointer;font-family:var(--font)">PRO ₦1,500</button>
+      <button id="pro-btn" onclick="showUpgradeModal()" style="background:var(--gold);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--g1);cursor:pointer;font-family:var(--font)">Upgrade Pro</button>
     </div>
   </div>
   <div class="nav">
@@ -520,6 +520,55 @@ function db(k,v){if(v===undefined){try{var r=localStorage.getItem('ppng4_'+k);re
 var isDemo=false;
 var S={farmer:db('farmer')||{name:'',farm:''},flocks:db('flocks')||[],feeds:db('feeds')||[],fcrs:db('fcrs')||[],eggs:db('eggs')||[],vaccs:db('vaccs')||[],sales:db('sales')||[],unit:'kg'};
 
+/* ── PRO GATING ── */
+var FREE_LIMITS={maxActiveFlocks:2,maxFeedEntries:10,maxBatchHistory:3,fcrHistoryWeeks:4};
+function isPro(){
+  var exp=db('proExpiry');
+  if(!exp)return false;
+  return new Date(exp)>new Date();
+}
+function proExpiry(){return db('proExpiry')||null;}
+function activateProManual(months){
+  var d=new Date();d.setMonth(d.getMonth()+months);
+  db('proExpiry',d.toISOString());
+  save();updatePlanBadge();toast('Pro activated until '+d.toLocaleDateString('en-NG'));
+}
+function updatePlanBadge(){
+  var badge=document.getElementById('plan-badge');
+  var btn=document.getElementById('pro-btn');
+  if(!badge)return;
+  if(isDemo){
+    badge.textContent='DEMO';badge.style.background='#E65100';badge.style.color='#fff';
+    if(btn){btn.textContent='Exit Demo';btn.onclick=exitDemo;}
+    return;
+  }
+  if(isPro()){
+    var exp=new Date(proExpiry());
+    var days=Math.ceil((exp-new Date())/(1000*60*60*24));
+    badge.textContent='PRO';badge.style.background='#F9A825';badge.style.color='#1B5E20';
+    if(btn){btn.textContent='Pro — '+days+'d left';btn.style.background='#E8F5E9';btn.style.color='#1B5E20';}
+  } else {
+    badge.textContent='FREE';badge.style.background='#F9A825';badge.style.color='#1B5E20';
+    if(btn){btn.textContent='Upgrade Pro';btn.style.background='#F9A825';btn.style.color='#1B5E20';btn.onclick=showUpgradeModal;}
+  }
+}
+function gateModal(title,reason,tip){
+  document.getElementById('modal-root').innerHTML=
+    '<div class="modal-bg" onclick="closeModal(event)">'
+    +'<div class="modal-sheet">'
+    +'<button class="modal-close" onclick="closeModalDirect()">&#x2715;</button>'
+    +'<div style="text-align:center;padding:8px 0 12px">'
+    +'<div style="width:52px;height:52px;background:#E8F5E9;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">'
+    +'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1B5E20" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>'
+    +'<div class="modal-title">'+title+'</div>'
+    +'<div class="modal-sub">'+reason+'</div>'
+    +'</div>'
+    +'<div style="background:#E8F5E9;border-radius:10px;padding:11px 13px;margin-bottom:14px;font-size:13px;color:#1B5E20;line-height:1.5">'+tip+'</div>'
+    +'<button class="btn btn-green" onclick="closeModalDirect();showUpgradeModal()" style="margin-bottom:10px">Upgrade to Pro — ₦15,000/month</button>'
+    +'<button class="btn btn-outline" onclick="closeModalDirect()">Stay on free plan</button>'
+    +'</div></div>';
+}
+
 var DEMO={
   farmer:{name:'Demo Farmer',farm:'Demo Farm'},
   flocks:[{id:'DF1',name:'Batch 9 (Broilers)',type:'broiler',count:500,startDate:'2026-02-01',supplier:'Amo Farm',status:'active'},{id:'DF2',name:'Layer Flock 3',type:'layer',count:350,startDate:'2025-11-10',supplier:'Chi Farm',status:'active'},{id:'DF3',name:'Batch 7 (Broilers)',type:'broiler',count:400,startDate:'2025-12-01',supplier:'Amo Farm',status:'closed',soldDate:'2026-02-10',soldPrice:4800,soldCount:388}],
@@ -552,10 +601,10 @@ function launch(){
   document.getElementById('topbar-farm').textContent=S.farmer.farm||'My Farm';
   document.getElementById('home-name').textContent=S.farmer.name||'Farmer';
   document.getElementById('home-date').textContent=new Date().toLocaleDateString('en-NG',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-  if(isDemo){document.getElementById('plan-badge').textContent='DEMO';document.getElementById('plan-badge').style.background=var_amb();document.getElementById('plan-badge').style.color='#fff';}
+  updatePlanBadge();
   buildIngr();populateSelects();renderHome();renderFlocks();renderVacc();
   document.getElementById('f-date').value=td();document.getElementById('v-date').value=td();
-  renderEggChart('DF2');
+  if(isDemo)renderEggChart('DF2');
 }
 function var_amb(){return '#E65100';}
 
@@ -583,6 +632,17 @@ function addFlock(){
   if(!nm){toast('Please enter a batch name');return;}
   var cnt=parseInt(document.getElementById('f-count').value)||0;
   if(cnt<1){toast('Please enter a valid bird count');return;}
+  /* FREE LIMIT: max 2 active flocks */
+  if(!isPro()){
+    var activeCount=S.flocks.filter(function(f){return f.status==='active';}).length;
+    if(activeCount>=FREE_LIMITS.maxActiveFlocks){
+      gateModal(
+        'Flock limit reached',
+        'You have '+activeCount+' active flocks. The free plan allows '+FREE_LIMITS.maxActiveFlocks+' active flocks at a time.',
+        'Upgrade to Pro to manage unlimited flocks simultaneously — perfect for farmers running overlapping broiler batches and layer flocks.'
+      );return;
+    }
+  }
   S.flocks.push({id:'F'+Date.now(),name:nm,type:document.getElementById('f-type').value,count:cnt,startDate:document.getElementById('f-date').value||td(),supplier:document.getElementById('f-supplier').value.trim(),status:'active'});
   save();populateSelects();renderFlocks();renderHome();
   document.getElementById('f-name').value='';document.getElementById('f-count').value='';document.getElementById('f-supplier').value='';
@@ -597,7 +657,13 @@ function closeFlock(id){
 function renderFlocks(){
   var el=document.getElementById('flock-list');
   if(!S.flocks.length){el.innerHTML='<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></div><div class="empty-title">No flocks yet</div><div class="empty-sub">Add your first batch below</div></div>';return;}
-  el.innerHTML=S.flocks.map(function(f){
+  /* Free plan: show only last 3 closed batches + all active */
+  var active=S.flocks.filter(function(f){return f.status==='active';});
+  var closed=S.flocks.filter(function(f){return f.status==='closed';});
+  var visibleClosed=isPro()?closed:closed.slice(-FREE_LIMITS.maxBatchHistory);
+  var hiddenCount=closed.length-visibleClosed.length;
+  var visible=active.concat(visibleClosed);
+  var html=visible.map(function(f){
     var spend=S.feeds.filter(function(e){return e.fid===f.id;}).reduce(function(s,e){return s+e.cost;},0);
     var fcrs=S.fcrs.filter(function(l){return l.fid===f.id;});
     var fcrTxt=fcrs.length?'Efficiency: '+fcrs[fcrs.length-1].fcr+' FCR':'No efficiency data yet';
@@ -608,6 +674,21 @@ function renderFlocks(){
     var pnlHtml=pnl!==null?'<div class="flock-sub" style="color:'+(pnl>=0?'var(--g2)':'var(--red)')+'">P&L: '+(pnl>=0?'+':'')+fmt(pnl)+'</div>':'';
     return '<div class="flock-card"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="flock-name">'+f.name+'</div><div class="flock-sub">'+f.count.toLocaleString()+' birds &middot; Started '+f.startDate+'</div><div class="flock-sub">'+fcrTxt+' &middot; Feed: '+fmt(spend)+'</div>'+(f.supplier?'<div class="flock-sub">Supplier: '+f.supplier+'</div>':'')+pnlHtml+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px"><span class="flock-tag '+tag+'">'+tagLbl+'</span>'+(f.status==='active'?'<button class="btn-sm" onclick="closeFlock(\''+f.id+'\')">Close &amp; P&L</button>':'')+'</div></div></div>';
   }).join('');
+  if(hiddenCount>0){
+    html+='<div onclick="showUpgradeModal()" style="text-align:center;padding:12px;border:.5px solid var(--border);border-radius:var(--r);background:var(--bg2);cursor:pointer;margin-bottom:8px">'
+      +'<div style="font-size:13px;color:var(--txt2);margin-bottom:4px">'+hiddenCount+' older batch'+(hiddenCount>1?'es':'')+' hidden</div>'
+      +'<div style="font-size:12px;color:#1B5E20;font-weight:500">Upgrade to Pro to see full history</div>'
+      +'</div>';
+  }
+  /* Free plan flock counter */
+  if(!isPro()){
+    var activeNow=active.length;
+    var remaining=FREE_LIMITS.maxActiveFlocks-activeNow;
+    html+='<div style="text-align:center;padding:8px;font-size:12px;color:var(--txt3)">'
+      +(remaining>0?remaining+' free flock slot'+(remaining>1?'s':'')+' remaining':'<span style="color:#E65100;cursor:pointer" onclick="showUpgradeModal()">Free plan limit reached — Upgrade to add more</span>')
+      +'</div>';
+  }
+  el.innerHTML=html;
 }
 function populateSelects(){
   var active=S.flocks.filter(function(f){return f.status==='active';});
@@ -671,52 +752,41 @@ function closeModalDirect(){document.getElementById('modal-root').innerHTML='';}
 
 /* ── PAYSTACK UPGRADE MODAL ── */
 function showUpgradeModal(){
+  var proActive=isPro();
+  var expiry=proActive?new Date(proExpiry()).toLocaleDateString('en-NG'):'';
   document.getElementById('modal-root').innerHTML=
-    '<div class="modal-bg" onclick="closeModal(event)">'
-    +'<div class="modal-sheet">'
-    +'<button class="modal-close" onclick="closeModalDirect()">&#x2715;</button>'
-    +'<div class="modal-title">Upgrade to Pro</div>'
-    +'<div class="modal-sub">Unlock unlimited batch history, P&L reports, PDF export and priority WhatsApp support.</div>'
-    +'<div class="plan-card selected" onclick="selectPlan(this,\'monthly\')">'
-    +'<div style="display:flex;justify-content:space-between;align-items:center"><div class="plan-name">Monthly Pro<span class="plan-badge-pro">MOST POPULAR</span></div><div class="plan-price">₦15,000<span style="font-size:13px;color:var(--txt3)">/month</span></div></div>'
-    +'<div class="plan-features">✓ Unlimited flocks &nbsp; ✓ Full P&L per batch<br>✓ FCR history charts &nbsp; ✓ WhatsApp support</div>'
-    +'</div>'
-    +'<div class="plan-card" onclick="selectPlan(this,\'quarterly\')">'
-    +'<div style="display:flex;justify-content:space-between;align-items:center"><div class="plan-name">Quarterly Pro</div><div class="plan-price">₦35,000<span style="font-size:13px;color:var(--txt3)">/3 months</span></div></div>'
-    +'<div class="plan-features">Everything in Monthly &nbsp; ✓ Save ₦1,000<br>✓ Founder discount — limited time</div>'
-    +'</div>'
-    +'<div style="background:var(--g4);border-radius:var(--rs);padding:10px 14px;margin:12px 0;font-size:13px;color:var(--g1);line-height:1.5">Think of it this way: if the app helps you save one bag of feed per batch by catching a poor FCR early, it has paid for 12 months of Pro subscription.</div>'
-    +'<button class="btn btn-green" onclick="payWithPaystack()" style="margin-bottom:10px">Pay with Paystack</button>'
-    +'<div style="text-align:center;font-size:12px;color:var(--txt3)">Secure payment via Paystack &middot; Nigerian cards, bank transfer &amp; USSD accepted</div>'
-    +'<div class="divider"></div>'
-    +'<div style="font-size:13px;color:var(--txt3);margin-bottom:8px">Or pay directly — send to my account and I will activate your Pro access:</div>'
-    +'<button class="btn btn-wa" onclick="payViaWhatsApp()" style="margin-bottom:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.5 2C6.262 2 2 6.262 2 11.5c0 1.67.435 3.235 1.195 4.594L2 22l6.093-1.178A9.447 9.447 0 0 0 11.5 21.999C16.739 22 21 17.738 21 12.5 21 7.262 16.739 3 11.5 3z"/></svg>Pay via WhatsApp (Bank Transfer)</button>'
-    +'</div></div>';
+    '<div class="modal-bg" onclick="closeModal(event)">'    +'<div class="modal-sheet">'    +'<button class="modal-close" onclick="closeModalDirect()">&#x2715;</button>'    +(proActive?'<div style="background:#E8F5E9;border-radius:10px;padding:10px 13px;margin-bottom:14px;font-size:13px;color:#1B5E20">You are on Pro until '+expiry+'. Thank you!</div>':'')    +'<div class="modal-title">Upgrade to Pro</div>'    +'<div class="modal-sub">Unlimited flocks, full batch history and direct WhatsApp support from a real farmer.</div>'    +'<div id="pc-monthly" onclick="selectPlan(this,\'monthly\')" style="border:2px solid #1B5E20;border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer">'    +'<div style="font-size:14px;font-weight:500">Monthly Pro <span style="background:#F9A825;color:#1B5E20;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px">POPULAR</span></div>'    +'<div style="font-size:24px;font-weight:700;color:#1B5E20;margin:4px 0">&#8358;15,000<span style="font-size:13px;color:#888;font-weight:400">/month</span></div>'    +'<div style="font-size:13px;color:#555;line-height:1.7">&#10003; Unlimited flocks &nbsp; &#10003; Full P&amp;L history &nbsp; &#10003; Priority WhatsApp support</div>'    +'</div>'    +'<div id="pc-quarterly" onclick="selectPlan(this,\'quarterly\')" style="border:.5px solid rgba(0,0,0,.1);border-radius:12px;padding:14px;margin-bottom:12px;cursor:pointer">'    +'<div style="font-size:14px;font-weight:500">Quarterly Pro</div>'    +'<div style="font-size:24px;font-weight:700;color:#1B5E20;margin:4px 0">&#8358;35,000<span style="font-size:13px;color:#888;font-weight:400">/3 months</span></div>'    +'<div style="font-size:13px;color:#555">Everything in Monthly &#10003; Save &#8358;10,000</div>'    +'</div>'    +'<div style="background:#E8F5E9;border-radius:10px;padding:11px 13px;margin-bottom:14px;font-size:13px;color:#1B5E20;line-height:1.5">One bag of finisher costs &#8358;19,000. If the app saves you one bag per batch by catching a poor FCR — it pays for itself in week one.</div>'    +'<button class="btn btn-green" onclick="payViaWhatsApp()" style="margin-bottom:8px">Pay via WhatsApp (Bank Transfer / Opay)</button>'    +'<div style="text-align:center;font-size:12px;color:#888;margin-bottom:14px">I activate your Pro within 1 hour of payment</div>'    +'<div style="height:.5px;background:rgba(0,0,0,.1);margin-bottom:12px"></div>'    +'<div style="font-size:12px;color:#888;margin-bottom:8px;font-weight:500">Already paid? Enter your activation code:</div>'    +'<div style="display:flex;gap:8px">'    +'<input type="text" id="promo-input" placeholder="e.g. PPNG-2026-M1" style="flex:1;padding:9px 12px;font-size:14px;border:.5px solid rgba(0,0,0,.18);border-radius:8px"/>'    +'<button onclick="activateCode()" style="padding:9px 14px;background:#1B5E20;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Activate</button>'    +'</div>'    +'</div></div>';
 }
 var selectedPlan='monthly';
-function selectPlan(el,plan){selectedPlan=plan;document.querySelectorAll('.plan-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');}
-function payWithPaystack(){
-  /* Replace YOUR_PAYSTACK_KEY and YOUR_EMAIL with your real values */
-  var amount=selectedPlan==='monthly'?150000:350000;
-  var handler=window.PaystackPop&&window.PaystackPop.setup({
-    key:'pk_live_YOUR_PAYSTACK_PUBLIC_KEY',
-    email:'customer@example.com',
-    amount:amount,
-    currency:'NGN',
-    ref:'PPG-'+Date.now(),
-    metadata:{plan:selectedPlan,farm:S.farmer.farm},
-    callback:function(response){closeModalDirect();toast('Payment successful! Ref: '+response.reference+'. WhatsApp us to activate Pro.');},
-    onClose:function(){}
-  });
-  if(handler){handler.openIframe();}else{
-    toast('Opening payment page...');
-    window.open('https://paystack.com/pay/poultrypro-ng','_blank');
-  }
+function selectPlan(el,plan){
+  selectedPlan=plan;
+  ['pc-monthly','pc-quarterly'].forEach(function(id){var c=document.getElementById(id);if(c)c.style.border='.5px solid rgba(0,0,0,.1)';});
+  if(el)el.style.border='2px solid #1B5E20';
 }
 function payViaWhatsApp(){
-  var plan=selectedPlan==='monthly'?'Monthly Pro (₦15,000)':'Quarterly Pro (₦35,000)';
-  var msg='Hello! I want to subscribe to Poultry Pro NG '+plan+'. My farm name is: '+S.farmer.farm+'. Please send me your account details.';
+  var plan=selectedPlan==='monthly'?'Monthly Pro (N15,000/month)':'Quarterly Pro (N35,000 for 3 months)';
+  var msg='Hello! I want to subscribe to Poultry Pro NG '+plan+'\n\nMy name: '+S.farmer.name+'\nFarm: '+S.farmer.farm+'\n\nPlease send me your bank account details.';
   window.open('https://wa.me/2348063542868?text='+encodeURIComponent(msg),'_blank');
+}
+var VALID_CODES={
+  'PPNG-TEST-M':1,'PPNG-TEST-Q':3,
+  'PPNG-2026-M1':1,'PPNG-2026-M2':1,'PPNG-2026-M3':1,'PPNG-2026-M4':1,'PPNG-2026-M5':1,
+  'PPNG-2026-M6':1,'PPNG-2026-M7':1,'PPNG-2026-M8':1,'PPNG-2026-M9':1,'PPNG-2026-M10':1,
+  'PPNG-2026-Q1':3,'PPNG-2026-Q2':3,'PPNG-2026-Q3':3,'PPNG-2026-Q4':3,'PPNG-2026-Q5':3
+};
+function activateCode(){
+  var code=(document.getElementById('promo-input').value||'').trim().toUpperCase();
+  if(!code){toast('Please enter your activation code');return;}
+  var usedCodes=db('usedCodes')||[];
+  if(usedCodes.indexOf(code)>=0){toast('This code has already been used');return;}
+  var months=VALID_CODES[code];
+  if(months){
+    usedCodes.push(code);db('usedCodes',usedCodes);
+    activateProManual(months);closeModalDirect();
+    toast('Pro activated for '+months+' month'+(months>1?'s':'')+'! Welcome to Pro.');
+  } else {
+    toast('Code not found. Check spelling or WhatsApp 08063542868.');
+  }
 }
 
 /* ── FEED ── */
@@ -742,6 +812,17 @@ function saveFeed(){
   var bags=parseFloat(document.getElementById('fc-bags').value);
   var price=parseFloat(document.getElementById('fc-price').value);
   if(!fid||!bags||!price){toast('Please fill flock, bags and price');return;}
+  /* FREE LIMIT: max 10 feed entries per flock */
+  if(!isPro()){
+    var flockFeeds=S.feeds.filter(function(e){return e.fid===fid;}).length;
+    if(flockFeeds>=FREE_LIMITS.maxFeedEntries){
+      gateModal(
+        'Feed entry limit reached',
+        'You have logged '+flockFeeds+' feed entries for this flock. The free plan allows '+FREE_LIMITS.maxFeedEntries+' entries per flock.',
+        'Upgrade to Pro to log unlimited feed purchases across all your batches — and never lose your feed cost history again.'
+      );return;
+    }
+  }
   var wt=parseFloat(document.getElementById('fc-wt').value)||25;
   S.feeds.push({id:'FE'+Date.now(),fid:fid,date:td(),type:document.getElementById('fc-type').value,bags:bags,price:price,wt:wt,cost:bags*price,kg:bags*wt});
   save();renderHome();
@@ -798,15 +879,24 @@ function calcFCR(){
   res.style.display='block';
 }
 function renderFCRChart(fid,cur){
-  var logs=S.fcrs.filter(function(l){return l.fid===fid;}).slice(-4);
+  var allLogs=S.fcrs.filter(function(l){return l.fid===fid;});
+  /* Free plan: show last 4 weeks only */
+  var logs=isPro()?allLogs.slice(-8):allLogs.slice(-FREE_LIMITS.fcrHistoryWeeks);
   var pts=logs.map(function(l){return{l:'Wk'+l.week,v:l.fcr};});
   pts.push({l:'Now',v:parseFloat(cur.toFixed(2)),cur:true});
   var max=Math.max.apply(null,pts.map(function(p){return p.v;}))+0.3;
-  document.getElementById('fcr-chart').innerHTML=pts.map(function(p){
+  var chartHtml=pts.map(function(p){
     var pct=Math.round((p.v/max)*100);
     var col=p.v<1.8?'#2E7D32':p.v<2.0?'#E65100':'#C62828';
     return '<div class="bar-col"><div class="bar-block" style="height:'+pct+'%;background:'+col+(p.cur?';outline:2px solid #333;outline-offset:1px':'')+'"></div><div class="bar-lbl">'+p.v.toFixed(1)+'</div><div class="bar-lbl">'+p.l+'</div></div>';
   }).join('');
+  /* Show pro upsell if history is being clipped */
+  var proHint=(!isPro()&&allLogs.length>FREE_LIMITS.fcrHistoryWeeks)?
+    '<div onclick="showUpgradeModal()" style="font-size:11px;color:#E65100;text-align:center;margin-top:6px;cursor:pointer;text-decoration:underline">Showing last '+FREE_LIMITS.fcrHistoryWeeks+' weeks · Upgrade for full history</div>':'';
+  document.getElementById('fcr-chart').innerHTML=chartHtml;
+  var hint=document.getElementById('fcr-chart').nextElementSibling;
+  if(hint&&hint.id==='fcr-pro-hint'){hint.outerHTML=proHint?'<div id="fcr-pro-hint">'+proHint+'</div>':'';}
+  else if(proHint){document.getElementById('fcr-chart').insertAdjacentHTML('afterend','<div id="fcr-pro-hint">'+proHint+'</div>');}
 }
 function saveFCR(){
   if(isDemo){toast('Exit demo to save your own data');return;}
