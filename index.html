@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<!-- CRITICAL: hide app before render to prevent flash -->
+<style>
+#app-page,#onboard,#main-app{display:none!important}
+#landing-page{display:block!important}
+</style>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
 <meta name="description" content="Poultry Pro NG — Feed calculator, FCR tracker and egg production manager for Nigerian farmers. Works offline."/>
 <meta name="theme-color" content="#1B5E20"/>
@@ -1026,12 +1031,17 @@ input.err{border-color:var(--red)}
 
 /* ── LANDING PAGE ── */
 function goToApp(demo) {
-  document.getElementById('landing-page').style.display = 'none';
-  document.getElementById('app-page').style.display = 'block';
+  var lp = document.getElementById('landing-page');
+  var ap = document.getElementById('app-page');
+  var ob = document.getElementById('onboard');
+  lp.style.cssText = 'display:none!important';
+  ap.style.cssText = 'display:block!important';
+  ob.style.cssText = 'display:flex!important;flex-direction:column;min-height:100vh;background:var(--bg)';
   if (demo) {
     startDemo();
   } else {
     if (S.farmer && S.farmer.name) {
+      ob.style.cssText = 'display:none!important';
       launch();
     }
     /* else onboarding shows naturally */
@@ -1250,10 +1260,10 @@ function exitDemo() {
 }
 
 function launch() {
-  document.getElementById('landing-page').style.display = 'none';
-  document.getElementById('app-page').style.display = 'block';
-  document.getElementById('onboard').style.display = 'none';
-  document.getElementById('main-app').style.display = 'flex';
+  document.getElementById('landing-page').style.cssText = 'display:none!important';
+  document.getElementById('app-page').style.cssText = 'display:block!important';
+  document.getElementById('onboard').style.cssText = 'display:none!important';
+  document.getElementById('main-app').style.cssText = 'display:flex!important;flex-direction:column;flex:1';
   document.getElementById('topbar-farm').textContent = S.farmer.farm || 'My Farm';
   document.getElementById('home-name').textContent = S.farmer.name || 'Farmer';
   document.getElementById('home-date').textContent = new Date().toLocaleDateString('en-NG', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
@@ -2139,8 +2149,8 @@ if ('serviceWorker' in navigator) {
 
 /* ── BOOT ── */
 if (S.farmer && S.farmer.name) {
-  document.getElementById('landing-page').style.display = 'none';
-  document.getElementById('app-page').style.display = 'block';
+  document.getElementById('landing-page').style.cssText = 'display:none!important';
+  document.getElementById('app-page').style.cssText = 'display:block!important';
   launch();
 }
 
